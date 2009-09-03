@@ -1,0 +1,3 @@
+Part1.2:
+
+De tilføjede linjer sætter det viste koordinatsystem, så man kan se den gule polygon i sin fulde udstrækning på skærmen.

@@ -1,0 +1,5 @@
+Part 5.1:
+
+Vi bruger GL_LINE_LOOP til at tegne cirklen.
+
+Skal cirklen være solid bruger vi 360 trekanter (GL_TRIANGLES) til det.

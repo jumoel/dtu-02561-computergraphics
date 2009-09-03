@@ -1,0 +1,8 @@
+
+
+De tre transformationer, der skal bruges er:
+
+Translation
+Skalering
+Translation tilbage
+

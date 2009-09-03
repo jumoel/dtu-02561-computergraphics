@@ -1,0 +1,5 @@
+Part 2.5:
+
+For at rotere rektanglet om sit eget centrum, skulle det først translateres,
+så det blev flyttet ned med centrum på Z-aksen hvor X-Y-akserne krydser. Derefter
+blev det roteret og derefter translateret tilbage.

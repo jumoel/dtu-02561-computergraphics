@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt,danish,titlepage]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[danish]{babel}
+\usepackage{url}
+\usepackage{lastpage}
+\usepackage{bookmark}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[all]{xy}
+\usepackage{sectsty}
+\usepackage{amsmath}
+
+\usepackage{cmbright}
+\renewcommand{\familydefault}{\rmdefault}
+\allsectionsfont{\sffamily}
+
+
+\date{Januar 2010}
+
+\newcommand{\thetitle}{Computergrafik}
+
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\title{{\huge DTU 02651} \\ {\normalsize \thetitle}}
+
+\author{
+  {\small
+    \begin{tabular}{llll}
+      Julian Møller & 180387-1619 & s084246 & \email{boolean@diku.dk} \\
+      Steen Nordsmark Pedersen & 150287-1435 & s092642 & \email{acid@diku.dk} \\
+    \end{tabular}
+  }
+}
+
+\pagestyle{fancy}
+	\lhead{\thetitle}
+	\chead{}
+	\rhead{}
+	\lfoot{}
+	\cfoot{Side \thepage \ af \pageref{LastPage}}
+	\rfoot{}
+
+\numberwithin{figure}{subsection}
+
+
+\begin{document}
+
+\maketitle
+
+\include{exercise01}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 

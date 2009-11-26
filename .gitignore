@@ -3,3 +3,4 @@
 *.vcproj
 *.user
 */*/Debug
+*/*/Release

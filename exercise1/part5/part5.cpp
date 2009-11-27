@@ -33,11 +33,11 @@ void solid_circle(float radius) {
 	for(int i = 0; i <= 360; i++) {
 		float degree_in_rad = (float)i*DEGTORAD;
 
-		if (i / 90 == 0) {
+		if (i <= 90) {
 			glColor3f(0.0, 1.0, 0.0);
-		} else if (i / 90 == 1) {
+		} else if (i <= 180) {
 			glColor3f(0.0, 0.0, 1.0);
-		} else if (i / 90 == 2) {
+		} else if (i <= 270) {
 			glColor3f(1.0, 0.0, 0.0);
 		} else {
 			glColor3f(1.0, 1.0, 1.0);

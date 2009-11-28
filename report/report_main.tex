@@ -12,10 +12,12 @@
 \usepackage{sectsty}
 \usepackage{amsmath}
 
+\usepackage{parskip}
+
+\usepackage{charter}
 \usepackage{cmbright}
 \renewcommand{\familydefault}{\rmdefault}
 \allsectionsfont{\sffamily}
-
 
 \date{Januar 2010}
 
@@ -34,20 +36,44 @@
   }
 }
 
-\pagestyle{fancy}
-	\lhead{\thetitle}
-	\chead{}
-	\rhead{}
-	\lfoot{}
-	\cfoot{Side \thepage \ af \pageref{LastPage}}
-	\rfoot{}
-
 \numberwithin{figure}{subsection}
-
 
 \begin{document}
 
 \maketitle
+
+\pagestyle{fancy}
+	\lhead{\thetitle}
+	\chead{}
+	\rhead{DTU, efterår 2009}
+	\lfoot{}
+	\cfoot{\thepage}
+	\rfoot{}
+\setcounter{page}{1}
+\pagenumbering{roman}
+
+\tableofcontents
+\newpage
+
+\listoffigures
+
+Figurerne er nummereret på følgende måde:
+
+\texttt{<ugeopgavenummer>.<delopgavenummer>.<figurnummer>}
+
+Dvs. at figuren \emph{1.2.1} er den første figur, tilhørende den anden
+delopgave i den første ugeopgave.
+\newpage
+
+\pagestyle{fancy}
+	\lhead{\thetitle}
+	\chead{}
+	\rhead{DTU, efterår 2009}
+	\lfoot{}
+	\cfoot{Side \thepage \ af \pageref{LastPage}}
+	\rfoot{}
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
 \include{exercise01}
 

@@ -1,81 +1,25 @@
-\documentclass[a4paper,11pt,danish,titlepage]{article}
-
-\usepackage[latin1]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[danish]{babel}
-\usepackage{url}
-\usepackage{lastpage}
-\usepackage{bookmark}
-\usepackage{fancyhdr}
-\usepackage{graphicx}
-\usepackage[all]{xy}
-\usepackage{sectsty}
-\usepackage{amsmath}
-
-\usepackage{parskip}
-
-\usepackage{charter}
-\usepackage{cmbright}
-\renewcommand{\familydefault}{\rmdefault}
-\allsectionsfont{\sffamily}
+\documentclass[a4paper,11pt,danish,titlingpage,oneside]{memoir}
+\usepackage{report}
 
 \date{Januar 2010}
 
-\newcommand{\thetitle}{Computergrafik}
+\newcommand{\mytitle}{Computergrafik (efterår 2009)}
+\newcommand{\mysubject}{DTU 02561}
 
-\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
-
-\title{{\huge DTU 02651} \\ {\normalsize \thetitle}}
-
+\preauthor{\begin{center}\footnotesize\begin{tabular}{llll}}
+\postauthor{\end{tabular}\end{center}}
 \author{
-  {\small
-    \begin{tabular}{llll}
-      Julian Møller & 180387-1619 & s084246 & \email{boolean@diku.dk} \\
-      Steen Nordsmark Pedersen & 150287-1435 & s092642 & \email{acid@diku.dk} \\
-    \end{tabular}
-  }
+    Julian Møller & 180387-1619 & s084246 & \email{boolean@diku.dk} \\
+    Steen Nordsmark Pedersen & 150287-1435 & s092642 &
+    \email{acid@diku.dk}
 }
-
-\numberwithin{figure}{subsection}
-
+\title{\mytitle}
 \begin{document}
 
-\maketitle
-
-\pagestyle{fancy}
-	\lhead{\thetitle}
-	\chead{}
-	\rhead{DTU, efterår 2009}
-	\lfoot{}
-	\cfoot{\thepage}
-	\rfoot{}
-\setcounter{page}{1}
-\pagenumbering{roman}
-
-\tableofcontents
-\newpage
-
-\listoffigures
-
-Figurerne er nummereret på følgende måde:
-
-\texttt{<ugeopgavenummer>.<delopgavenummer>.<figurnummer>}
-
-Dvs. at figuren \emph{1.2.1} er den første figur, tilhørende den anden
-delopgave i den første ugeopgave.
-\newpage
-
-\pagestyle{fancy}
-	\lhead{\thetitle}
-	\chead{}
-	\rhead{DTU, efterår 2009}
-	\lfoot{}
-	\cfoot{Side \thepage \ af \pageref{LastPage}}
-	\rfoot{}
-\setcounter{page}{1}
-\pagenumbering{arabic}
+\preamble
 
 \include{exercise01}
+%\include{exercise02}
 
 \end{document}
 

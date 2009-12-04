@@ -4,3 +4,6 @@ auto/
 auto/*
 *.log
 *.pdf
+*.toc
+*.lof
+\#*\#

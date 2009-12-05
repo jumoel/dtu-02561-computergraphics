@@ -12,12 +12,29 @@
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{calc}
+\usepackage[marginpar]{todo}
 \usepackage{cmbright}
 \usepackage{charter}
 
 \renewcommand{\familydefault}{\rmdefault}
 
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+%% TODO-changes
+\renewcommand{\todoitem}[2]{%
+\item \label{todolbl:\thetodo} %
+\ifx#1\todomark%
+\else\textbf{#1 }%
+\fi%
+(side~\pageref{todopage:\thetodo})\ #2}
+
+\renewcommand{\@todomarginpar}[1]{\marginpar{\colorbox{black}{\textsf{\textbf{\color{white}{
+          #1
+    (\ref{todolbl:\thetodo})}}}}}}
+
+\renewcommand{\todoname}{Arbejdsopgaver}
+\renewcommand{\todomark}{TODO}
+%%
 
 \definecolor{Dark}{gray}{.2}
 \definecolor{Medium}{gray}{.6}

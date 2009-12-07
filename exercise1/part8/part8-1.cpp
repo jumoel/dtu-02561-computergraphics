@@ -48,7 +48,7 @@ void reshape (int w, int h) {
     glViewport (0, 0, (GLsizei) w, (GLsizei) h);
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
-		gluPerspective(60.0, (GLsizei) w / (GLsizei) h, 10.0, 10000000.0);
+		gluPerspective(45.0, (GLsizei) w / (GLsizei) h, 10.0, 10000000.0);
     glMatrixMode (GL_MODELVIEW);
 }
 
@@ -67,9 +67,9 @@ void display (void) {
 
 	//glTranslatef(-5., -5., 5.);
    glColor3f (0.,0.,1.);
-   glutWireCube (5.);
+   glutWireCube (2.);
    glColor3f (1.,1.,1.); 
-   glutSolidCube (5.);
+   glutSolidCube (2.);
 
     glPopMatrix();
     axis();

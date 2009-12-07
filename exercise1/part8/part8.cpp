@@ -67,9 +67,9 @@ void display (void) {
 
 	//glTranslatef(-5., -5., 5.);
    glColor3f (0.,0.,1.);
-   glutWireCube (2.);
+   glutWireCube (10.);
    glColor3f (1.,1.,1.); 
-   glutSolidCube (2.);
+   glutSolidCube (10.);
 
     glPopMatrix();
     axis();

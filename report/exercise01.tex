@@ -259,15 +259,23 @@ translateringen også er blevet skaleret med en faktor to.
 Idet, der i denne opgave skal laves et front-perspektiv
 (etpunktsperspektiv), viewplanet går igennem $(0,0,0)$ og kameraet er
 placeret i $(20,5,5)$ kan \emph{at}-punktet fx være at finde i
-$(20,5,-20)$, da et etpunksperspektiv har en synsretning, der er ikke er
-vinkelret på netop én akse. \todo{omformuler, så det er mere klart}
+$(20,5,-20)$, da et etpunksperspektiv har ét \emph{principal face} der
+er parallel med viewplanet. \todo{omformuler (og oversæt?), så det er
+  mere klart}
 
 For at få en ordentligt billede af kassen, har vi valgt også at lave
-den med sidestørrelse $5$ i stedet for $10$. Endvidere har vi lavet
+den med sidestørrelse $2$ i stedet for $10$. Endvidere har vi lavet
 kassen solid, med optegnede kanter, så perspektiv og aksernes
 placering er nemmere at vurdere. Frontperspektivet af kassen med
 sidestørrelse $10$ kan ses på figur \ref{fig:1-8-1}, mens kassen med
-sidestørrelse $5$ kan ses på figur \ref{fig:1-8-2}.
+sidestørrelse $2$ kan ses på figur \ref{fig:1-8-2}.
+
+I stedet for at ændre sidestørrelsen, kunne vi for at få et ordentligt
+billede også have translateret kassen til et andet punkt, eller
+ændret \emph{fov}-vinklen til fx. $90$. Det første ville naturligvis
+kunne give et billede af hele kassen ved at placere den længere ude af
+x-aksen samt under kameraet, mens en forstørreæse af \emph{fov} ville
+fungere som at zoome ud.
 
 Den lille hvide prik på begge billeder angiver forsvindingspunktet på
 horisonten for det brugte \emph{at}-punkt.
@@ -282,12 +290,13 @@ horisonten for det brugte \emph{at}-punkt.
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise1/part8/screenshots/part8_2.png}
-\caption{Frontperspektiv (sidestørrelse: 5)}
+\caption{Frontperspektiv (sidestørrelse: 2)}
 \label{fig:1-8-2}
 \end{figure}
 
 Udover frontperspektivet, skulle der også laves et X-perspektiv
-(topunktsperspektiv).
+(topunktsperspektiv). I et topunktsperspektiv er netop én akse i
+motivet parallel med viewplanet.
 
 
 %%% Local Variables: 

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="part8-1"
+	Name="part8"
 	ProjectGUID="{C1221B9D-8BFB-4950-B84A-9F7F38A463DC}"
-	RootNamespace="part81"
+	RootNamespace="part8"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -171,7 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\part8-1.cpp"
+				RelativePath=".\part8.cpp"
 				>
 			</File>
 		</Filter>

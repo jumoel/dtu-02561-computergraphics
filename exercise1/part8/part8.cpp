@@ -11,9 +11,22 @@ void display (void);
 void axis (void);
 void reshape (int w, int h);
 
+/* // 1-point perspective
 float atx = -20.0;
 float aty = 5.0;
 float atz = 5.0;
+float eyex = 20.0;
+float eyey = 5.0;
+float eyez = 5.0;
+float upx = 0.0;
+float upy = 1.0;
+float upz = 0.0;
+*/
+
+// 2-point perspective
+float atx = 0.0;
+float aty = 5.0;
+float atz = 0.0;
 float eyex = 20.0;
 float eyey = 5.0;
 float eyez = 5.0;
@@ -59,17 +72,17 @@ void display (void) {
 		
 		gluLookAt(eyex, eyey, eyez, atx, aty, atz, upx, upy, upz);
 	  glPushMatrix();
-		
+
+	  /* // horizon point for 1-point perspective
     glBegin(GL_POINTS);
       glVertex3f(atx, aty, atz);
     glEnd();
+	*/
 
-
-	//glTranslatef(-5., -5., 5.);
    glColor3f (0.,0.,1.);
-   glutWireCube (10.);
+   glutWireCube (2.);
    glColor3f (1.,1.,1.); 
-   glutSolidCube (10.);
+   glutSolidCube (2.);
 
     glPopMatrix();
     axis();

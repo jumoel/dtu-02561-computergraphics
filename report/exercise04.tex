@@ -34,3 +34,84 @@ trykket på en knap, og hvis det er tilfældet hvilken knap der er
 blevet trykket på. Det gør den ved at undersøge om musetrykket er
 inden for rammerne af knapperne. Da hver knap altid fylder 10\% af
 skærmbredden er dette tjek nemt.
+
+\section{Del 2: \texttt{select}, \texttt{pick}, \texttt{picksqua}, \texttt{pickdept}}
+\label{sec:del-2:-select-pick-picks}
+
+\subsection{\texttt{select}}
+\label{sec:select}
+
+\texttt{select}-programmet demonstrerer, hvordan udvælgelsesfunktionen
+i OpenGL undersøger, hvor mange forskellige objekter, der er inde i et
+område defineret af en omgivende kasse.
+
+\subsection{\texttt{pick}}
+\label{sec:pick}
+
+I \texttt{pick}-programmet kaldes \texttt{gluPickMatrix}, hvis
+opførsel svarer til at sende en stråle igennem scenen ved musens
+position, og finde alle objekter, som strålen går igennem. Strålens
+retning er parallel med øjevektorens retning.
+
+\subsection{\texttt{pickdept}}
+\label{sec:pickdept}
+
+\texttt{pickdept} gør det samme som \texttt{pick}, bortset fra at
+\texttt{pickdept} også returnerer afstanden til de objekter, der er
+blevet ramt af strålen.
+
+\subsection{\texttt{picksqua}}
+\label{sec:picksqua}
+
+Dette program tillader at hvert objekt kan have flere navne. I
+programmet bliver det brugt til at angive hvilken række og kolonne
+firkanterne befinder sig i.
+
+Programmet skifter farve på firkanterne, når de bliver valgt med et
+venstreklik fra musen.
+
+\subsection{\emph{picking} og \emph{selection}}
+\label{sec:picking-og-selection}
+
+Forskellen mellem \emph{selection} og \emph{picking} er som følger:
+\emph{Selection} finder antallet af objekter inde i et givet område og
+identificerer dem ved navn. \emph{Picking} nøjes med at beregne
+antallet af objekter en stråle sendt gennem scenen har ramt. En
+kombination af \emph{picking} og \emph{selection} gør det muligt at
+skelne mellem objekter, der er blevet \emph{picket}, selvom de
+eventuelt gemmer sig bag hinanden.
+
+\section{\texttt{line}, \texttt{single\_double}, logik og \emph{rubber banding}}
+\label{sec:line-singledouble-logik}
+
+\texttt{line}-prgrammet lader en tegne linjer på et billede, der
+består af en firkant i én farve placeret på en baggrund med en anden
+farve. Programmet bruger en \texttt{XOR}-operation på den nuværende
+pixelfarve for at bestemme hvad linjens farve skal være. \texttt{XOR}
+gør, at linjen vil have modsat farve af den farve, der oprindeligt var
+på linjen. Det gør, at man kan fjerne linjen igen ved at tegne en ny
+oveni og også \texttt{XOR}'e baggrundsfarven her. Dermed vil den
+tegnede linje forsvinde, da farverne bliver returneret til deres
+originale værdier. 
+
+\texttt{single\_double}-programmet demonstrerer brug af \emph{single}-
+og \emph{double buffering}. Ved \emph{single buffering} sender OpenGL
+det genererede objekter til skærmen med det samme de er klar, hvilket
+kan skabe flimrende billeder. Det kan man undgå ved \emph{double
+  buffering}, hvor der er vist ét billede på skærmen mens det næste
+billede gøres klar. Herefter byttes der om på bufferne, så det nye
+billede vises, mens det gamle kan blive fjernet og tegnet oven på.
+
+Logikoperatorerne arbejder med farverne bitvist, hvilket tillader en
+at gøre ting som beskrevet med \texttt{XOR} tidligere.
+
+\emph{Rubber banding} er en teknik til at tegne primitive objekter
+(som linjestykker), mens de bliver manipuleret direkte. Dette kunne fx
+være en linje, hvor startpunktet er bestemt, mens slutpunktet først
+bestemmes ved det næste museklik. Når musen så flyttes, skal linjen
+gentegnes hele tiden, så resultatet kan ses med det samme.
+
+\section{Diagramprogram}
+\label{sec:diagramprogram}
+
+\todo{Implementer diagramprogrammet}

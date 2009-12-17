@@ -9,9 +9,9 @@
  * value range, which is returned.
  */
 
-#include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <GL/glut.h>
 
 void init(void)
 {

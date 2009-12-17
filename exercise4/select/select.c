@@ -14,9 +14,9 @@
  * the yellow triangles cause one hit with the name 3.
  */
 
-#include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <GL/glut.h>
 
 /* draw a triangle with vertices at (x1, y1), (x2, y2) 
  * and (x3, y3) at z units away from the origin.

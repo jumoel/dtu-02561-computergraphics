@@ -82,7 +82,6 @@ void mouse(int button, int state, int x, int y)
    gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
    drawObjects(GL_SELECT);
 
-
    glMatrixMode (GL_PROJECTION);
    glPopMatrix ();
    glFlush ();

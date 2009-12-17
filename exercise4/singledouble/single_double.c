@@ -9,8 +9,8 @@
 /* A Top-Down Approach with OpenGL, Third Edition */
 /* Addison-Wesley Longman, 2003 */
 
-#include <GL/glut.h>
 #include <stdlib.h>
+#include <GL/glut.h>
 
 static GLfloat spin = 0.0;
     int singleb, doubleb;

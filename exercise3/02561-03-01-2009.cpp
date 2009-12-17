@@ -20,7 +20,7 @@ void init(void)
    GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
    glClearColor (0.0, 0.0, 0.0, 0.0);
-   glShadeModel (GL_SMOOTH);
+   glShadeModel (GL_PHONG_WIN);
 
    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);

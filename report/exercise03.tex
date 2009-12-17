@@ -2,3 +2,54 @@
 \chapter{Ugeopgave 3}
 \label{cha:ugeopgave-3}
 
+\section{Part 1}
+
+\todo{mangler at forklare imba ligning}
+
+\section{Part 2}
+
+Setting the diffusal material to 0,0,0:
+Hvis man sætter diffusal material til 0,0,0 mister kuglen dens genskind på nær det der kommer fra det speculære materiale. Den bryder ikke længere lyset ud i flere vinkler.
+
+
+Setting the specular material to 0,0,0:
+Hvis man sætter det specular material til 0,0,0 mister man den glas-agtige reflektion og det bliver sværere at se hvor lyskilden er placeret i forhold til objektet. Det spekulære genskind beholder vinklen så indgangsvinkel er lig udgangsvinkel.
+
+What is the effect of inreasing shininess:
+Hvis shininess går mod uendeligt nærmer vi os et spejl. Vi kan se at når vi har sat shininess til 0 så reflekterer kuglen lys i i mange vinkler og ikke koncentreret.
+
+\section{Part 3}
+
+Eye point at infinity:
+Hvis man flytter eye point til infinity kan nogle beregninger simplificeres. Der er lille forskel mellem vektorerne fra et objekt til øjet når man bevæger sig hen over objektet.
+
+Has the eye point any influence on shading:
+Da et objects shading afhænger af vinklen mellem light sourcen og eye har øjets position meget at sige om shading af et objekt.
+
+
+Light at infinity:
+Hvis man sætter lyskilden til infinity bliver det et ``directional light'' så lyset blot kommer fra en side, men ikke nogen vinkel. Det svarer til man har en uendelig stor lampe stående i den ene ende af ens univers.
+
+Binding the lightsource to the eye:
+Belysningen på et objekt vil altid komme fra samme punkt som man kigger fra. Det betyder at man aldrig vil se områder der ikke bliver belyst.
+
+Using a directional light source:
+Hvis man bruger et directional light vil lyset altid komme paralelt fra den bestemte retning.
+
+\section{Part 4}
+
+Difference on Flat, Gouraud and Fong shading:
+Flat shading skaber ``Mach bands'' mellem polygoner hvilket vil være meget synlige på runde former.
+
+Gouraud shading behandler vertexerne i et polygon og interpolerer mellem dem, mens Fong shading kan udregne pixel for pixel.
+
+
+Gouraud or Phong for highlighting:
+Hvis en highlighting tager et drastisk fald lige efter en vertex og man bruger Gouraud til at udregne sin shading vil faldet blive interpoleret og derved spredt ud gennem polygonet og derved bliver highlightingen størere, især hvis der er få polygoner i ens objekt. Fordi Phong beregner per pixel vil det være bedre at bruge denne.
+
+Does Gouraud shading depends on orientation:
+Gouraud shading kan ændre sig hvis man roterer et objekt. Hvis man har en firkant hvor 2 modstående vertexer har værdi 1 og de resterende 2 har 0 så kan man dele den op på 2 måder. Den ene måde har hvert polygon 2 vertexer med værdi 1, den anden har de 2 med værdi 0. Hvis man så interpolerer vil centrum af kassen få værdi 1 i det ene tilfælde og værdi 0 i det andet, hvilket giver 2 forskellige resultater.
+
+\section{Part 5}
+
+\toto{Lav screenshots.}

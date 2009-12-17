@@ -1,3 +1,36 @@
 
 \chapter{Ugeopgave 4}
 \label{cha:ugeopgave-4}
+
+Formålet med denne opgave er at blive fortrolig med input og
+vindueshåndtering i Glut og OpenGL.
+
+\section{Del 1: \texttt{newpaint}}
+\label{sec:del-1:-newpaint}
+
+\texttt{Newpaint} har fem knapper, der hver har sin egen
+funktionalitet. Knappernes funktionalitet aktiveres ved at trykke på
+knapperne.
+
+\begin{itemize}
+\item Tegning af en linje, ved at venstreklikke på startpunktet og
+  efterfølgende slutpunktet.
+\item Tegning af en firkant, ved at venstreklikke på to hjørnepunkter.
+\item Tegning af en trekant, ved at venstreklikke på tre hjørnepunkter.
+\item Tegning af et punkt, ved at venstreklikke.
+\item Tegning af tekst, ved at venstreklikke på startpositionen,
+  skrive en tekst med tastaturet og venstreklikke et sted i programmet
+  for at afslutte indtastningen.
+\end{itemize}
+
+Endvidere er der popup-menuer, der aktiveres ved højre- eller
+midterklik på musen. Højrekliksmenuen lader en afslutte programmet
+(``quit'') eller rydde tegnefladen (``clear''). Midterkliksmenuen
+lader en sætte tegnefarven, forøge eller formindske pixelstørrelsen,
+samt aktivere eller dekativere udfyldning af figurerne.
+
+\texttt{pick}-funktionen bliver brugt til at bestemme om der er
+trykket på en knap, og hvis det er tilfældet hvilken knap der er
+blevet trykket på. Det gør den ved at undersøge om musetrykket er
+inden for rammerne af knapperne. Da hver knap altid fylder 10\% af
+skærmbredden er dette tjek nemt.

@@ -10,8 +10,40 @@
 #else
 #include <GL/glut.h>
 #endif
-
+#include <math.h>
    GLfloat theta=0.0;
+
+ enum {
+  X, Y, Z, W
+};
+ enum {
+  A, B, C, D
+};
+
+
+ /* Find the plane equation given 3 points. */
+void
+findPlane(GLfloat plane[4],
+  GLfloat v0[3], GLfloat v1[3], GLfloat v2[3])
+{
+  GLfloat vec0[3], vec1[3];
+
+  /* Need 2 vectors to find cross product. */
+  vec0[X] = v1[X] - v0[X];
+  vec0[Y] = v1[Y] - v0[Y];
+  vec0[Z] = v1[Z] - v0[Z];
+
+  vec1[X] = v2[X] - v0[X];
+  vec1[Y] = v2[Y] - v0[Y];
+  vec1[Z] = v2[Z] - v0[Z];
+
+  /* find cross product to get A, B, and C of plane equation */
+  plane[A] = vec0[Y] * vec1[Z] - vec0[Z] * vec1[Y];
+  plane[B] = -(vec0[X] * vec1[Z] - vec0[Z] * vec1[X]);
+  plane[C] = vec0[X] * vec1[Y] - vec0[Y] * vec1[X];
+
+  plane[D] = -(plane[A] * v0[X] + plane[B] * v0[Y] + plane[C] * v0[Z]);
+}
 
 void display(void)
 
@@ -19,9 +51,18 @@ void display(void)
 /* set clear color to white and clear window */
 
 	//part 1 a & b
+	GLfloat light[3]={0.0, 10.0, 0.0};
 
-	GLfloat light[4]={0.0, 10.0, 0.0, 0.0};
 
+	//Set Y-coordinates to 0.0 or -4.0 if you want to change between Yw=0 and Yw=-4
+	GLfloat plane[4];
+	GLfloat v1[3] = {0.0, 0.0, 0.0};
+	GLfloat v2[3] = {12.0, 0.0, 5.0};
+	GLfloat v3[3] = {1.0, 0.0, 3.0};
+
+	findPlane(plane, v1,v2,v3);
+	
+	GLfloat direction[3] = {-0.0, -1.0, -0.0};
 
 	GLfloat m[16];
 
@@ -30,8 +71,29 @@ void display(void)
 	int i;
 	for(i=0;i<16;i++) m[i]=0.0;
 
-	m[0]=m[5]=m[10]=1.0;
-	m[7]=-1.0/light[1];
+	GLfloat a,b,c,d,dx,dy,dz;
+	a=plane[0];
+	b=plane[1];
+	c=plane[2];
+	d=plane[3];
+	dx=direction[0];
+	dy=direction[1];
+	dz=direction[2];
+
+	m[0]=b*dy+c*dz;
+	m[1]=-a*dy;
+	m[2]=-a*dz;
+	m[4]=-b*dx;
+	m[5]=a*dx+c*dz;
+	m[6]=-b*dz;
+	m[8]=-c*dx;
+	m[9]=-c*dy;
+	m[10]=a*dx+b*dy;
+	m[12]=-d*dx;
+	m[13]=-d*dy;
+	m[14]=-d*dz;
+	m[15]=a*dx+b*dy+c*dz;
+
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -57,32 +119,20 @@ void display(void)
 		glVertex3f(-2.5,2.5, 2.5);
 		glVertex3f( 2.5,2.5, 2.5);	
 		glVertex3f( 2.5,2.5, -2.5);
-/*
-		glBegin(GL_POLYGON);
-		glVertex3f( -2.5, 6.5, -2.5);		
-		glVertex3f(-2.5,6.5, 2.5);
-		glVertex3f( 2.5,6.5, 2.5);	
-		glVertex3f( 2.5,6.5, -2.5);
-*/
+
 		glEnd();
 
 	glPushMatrix();
-	glTranslatef(light[0], light[1],light[2]);
+
 	glMultMatrixf(m);
-	glTranslatef(-light[0], -light[1],-light[2]);
+
 	glColor3f(0.0,0.0,0.0);
 	glBegin(GL_POLYGON);
 		glVertex3f( -2.5, 2.5, -2.5);		
 		glVertex3f(-2.5,2.5, 2.5);
 		glVertex3f( 2.5,2.5, 2.5);	
 		glVertex3f( 2.5,2.5, -2.5);
-/*
-	glBegin(GL_POLYGON);
-		glVertex3f( -2.5, 6.5, -2.5);		
-		glVertex3f(-2.5,6.5, 2.5);
-		glVertex3f( 2.5,6.5, 2.5);	
-		glVertex3f( 2.5,6.5, -2.5);
-*/
+
 		glEnd();
 	glPopMatrix();
 

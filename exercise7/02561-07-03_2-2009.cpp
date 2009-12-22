@@ -11,16 +11,56 @@
 #include <GL/glut.h>
 #endif
 
+ enum {
+  X, Y, Z, W
+};
+ enum {
+  A, B, C, D
+};
+
+
    GLfloat theta=0.0;
-double offset = 4.0;
+
+/* Find the plane equation given 3 points. */
+void
+findPlane(GLfloat plane[4],
+  GLfloat v0[3], GLfloat v1[3], GLfloat v2[3])
+{
+  GLfloat vec0[3], vec1[3];
+
+  /* Need 2 vectors to find cross product. */
+  vec0[X] = v1[X] - v0[X];
+  vec0[Y] = v1[Y] - v0[Y];
+  vec0[Z] = v1[Z] - v0[Z];
+
+  vec1[X] = v2[X] - v0[X];
+  vec1[Y] = v2[Y] - v0[Y];
+  vec1[Z] = v2[Z] - v0[Z];
+
+  /* find cross product to get A, B, and C of plane equation */
+  plane[A] = vec0[Y] * vec1[Z] - vec0[Z] * vec1[Y];
+  plane[B] = -(vec0[X] * vec1[Z] - vec0[Z] * vec1[X]);
+  plane[C] = vec0[X] * vec1[Y] - vec0[Y] * vec1[X];
+
+  plane[D] = -(plane[A] * v0[X] + plane[B] * v0[Y] + plane[C] * v0[Z]);
+}
+
 void display(void)
 
 {
 /* set clear color to white and clear window */
 
 	//part 1 a & b
-	GLfloat light[3]={10.0+offset, 2.0, 0.0};
+	GLfloat light[3]={10.0, 2.0, 0.0};
 
+	GLfloat plane[4];
+	GLfloat v1[3] = {-4.0, 2.0, 0.0};
+	GLfloat v2[3] = {-4.0, 0.0, 5.0};
+	GLfloat v3[3] = {-4.0, 1.0, 3.0};
+
+	findPlane(plane, v1,v2,v3);
+	
+	GLfloat direction[3] = {-1.0, 0.0, 0.0};
 
 	GLfloat m[16];
 
@@ -29,8 +69,31 @@ void display(void)
 	int i;
 	for(i=0;i<16;i++) m[i]=0.0;
 
-	m[0]=m[5]=m[10]=1.0;
-	m[3]=-1.0/light[0];
+	GLfloat a,b,c,d,dx,dy,dz;
+	a=plane[0];
+	b=plane[1];
+	c=plane[2];
+	d=plane[3];
+	dx=direction[0];
+	dy=direction[1];
+	dz=direction[2];
+
+	m[0]=b*dy+c*dz;
+	m[1]=-a*dy;
+	m[2]=-a*dz;
+	m[4]=-b*dx;
+	m[5]=a*dx+c*dz;
+	m[6]=-b*dz;
+	m[8]=-c*dx;
+	m[9]=-c*dy;
+	m[10]=a*dx+b*dy;
+	m[12]=-d*dx;
+	m[13]=-d*dy;
+	m[14]=-d*dz;
+	m[15]=a*dx+b*dy+c*dz;
+
+
+
 	glClearColor (1.0, 1.0, 1.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -52,75 +115,75 @@ void display(void)
 /* define unit square polygon */
 
 	glBegin(GL_QUADS);
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 3.0+offset, 0.0, 0.0);
-		glVertex3f( 3.0+offset, 0.0, 3.0);	
-		glVertex3f( 0.0+offset, 0.0, 3.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 3.0, 0.0, 0.0);
+		glVertex3f( 3.0, 0.0, 3.0);	
+		glVertex3f( 0.0, 0.0, 3.0);
 
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 3.0+offset, 0.0, 0.0);
-		glVertex3f( 3.0+offset, 3.0, 0.0);	
-		glVertex3f( 0.0+offset, 3.0, 0.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 3.0, 0.0, 0.0);
+		glVertex3f( 3.0, 3.0, 0.0);	
+		glVertex3f( 0.0, 3.0, 0.0);
 
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 0.0+offset, 3.0, 0.0);
-		glVertex3f( 0.0+offset, 3.0, 3.0);	
-		glVertex3f( 0.0+offset, 0.0, 3.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 0.0, 3.0, 0.0);
+		glVertex3f( 0.0, 3.0, 3.0);	
+		glVertex3f( 0.0, 0.0, 3.0);
 
 
-		glVertex3f( 0.0+offset, 0.0, 3.0);		
-		glVertex3f( 3.0+offset, 0.0, 3.0);
-		glVertex3f( 3.0+offset, 3.0, 3.0);	
-		glVertex3f( 0.0+offset, 3.0, 3.0);
+		glVertex3f( 0.0, 0.0, 3.0);		
+		glVertex3f( 3.0, 0.0, 3.0);
+		glVertex3f( 3.0, 3.0, 3.0);	
+		glVertex3f( 0.0, 3.0, 3.0);
 
-		glVertex3f( 0.0+offset, 3.0, 3.0);		
-		glVertex3f( 0.0+offset, 3.0, 0.0);
-		glVertex3f( 3.0+offset, 3.0, 0.0);	
-		glVertex3f( 3.0+offset, 3.0, 3.0);
+		glVertex3f( 0.0, 3.0, 3.0);		
+		glVertex3f( 0.0, 3.0, 0.0);
+		glVertex3f( 3.0, 3.0, 0.0);	
+		glVertex3f( 3.0, 3.0, 3.0);
 		
-		glVertex3f( 3.0+offset, 3.0, 3.0);		
-		glVertex3f( 3.0+offset, 3.0, 0.0);
-		glVertex3f( 3.0+offset, 0.0, 0.0);	
-		glVertex3f( 3.0+offset, 0.0, 3.0);
+		glVertex3f( 3.0, 3.0, 3.0);		
+		glVertex3f( 3.0, 3.0, 0.0);
+		glVertex3f( 3.0, 0.0, 0.0);	
+		glVertex3f( 3.0, 0.0, 3.0);
 
 		glEnd();
 
 	glPushMatrix();
-	glTranslatef(light[0], light[1],light[2]);
+
 	glMultMatrixf(m);
-	glTranslatef(-light[0], -light[1],-light[2]);
+
 	glColor3f(0.0,0.0,0.0);
 	glBegin(GL_QUADS);
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 3.0+offset, 0.0, 0.0);
-		glVertex3f( 3.0+offset, 0.0, 3.0);	
-		glVertex3f( 0.0+offset, 0.0, 3.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 3.0, 0.0, 0.0);
+		glVertex3f( 3.0, 0.0, 3.0);	
+		glVertex3f( 0.0, 0.0, 3.0);
 
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 3.0+offset, 0.0, 0.0);
-		glVertex3f( 3.0+offset, 3.0, 0.0);	
-		glVertex3f( 0.0+offset, 3.0, 0.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 3.0, 0.0, 0.0);
+		glVertex3f( 3.0, 3.0, 0.0);	
+		glVertex3f( 0.0, 3.0, 0.0);
 
-		glVertex3f( 0.0+offset, 0.0, 0.0);		
-		glVertex3f( 0.0+offset, 3.0, 0.0);
-		glVertex3f( 0.0+offset, 3.0, 3.0);	
-		glVertex3f( 0.0+offset, 0.0, 3.0);
+		glVertex3f( 0.0, 0.0, 0.0);		
+		glVertex3f( 0.0, 3.0, 0.0);
+		glVertex3f( 0.0, 3.0, 3.0);	
+		glVertex3f( 0.0, 0.0, 3.0);
 
 
-		glVertex3f( 0.0+offset, 0.0, 3.0);		
-		glVertex3f( 3.0+offset, 0.0, 3.0);
-		glVertex3f( 3.0+offset, 3.0, 3.0);	
-		glVertex3f( 0.0+offset, 3.0, 3.0);
+		glVertex3f( 0.0, 0.0, 3.0);		
+		glVertex3f( 3.0, 0.0, 3.0);
+		glVertex3f( 3.0, 3.0, 3.0);	
+		glVertex3f( 0.0, 3.0, 3.0);
 
-		glVertex3f( 0.0+offset, 3.0, 3.0);		
-		glVertex3f( 0.0+offset, 3.0, 0.0);
-		glVertex3f( 3.0+offset, 3.0, 0.0);	
-		glVertex3f( 3.0+offset, 3.0, 3.0);
+		glVertex3f( 0.0, 3.0, 3.0);		
+		glVertex3f( 0.0, 3.0, 0.0);
+		glVertex3f( 3.0, 3.0, 0.0);	
+		glVertex3f( 3.0, 3.0, 3.0);
 		
-		glVertex3f( 3.0+offset, 3.0, 3.0);		
-		glVertex3f( 3.0+offset, 3.0, 0.0);
-		glVertex3f( 3.0+offset, 0.0, 0.0);	
-		glVertex3f( 3.0+offset, 0.0, 3.0);
+		glVertex3f( 3.0, 3.0, 3.0);		
+		glVertex3f( 3.0, 3.0, 0.0);
+		glVertex3f( 3.0, 0.0, 0.0);	
+		glVertex3f( 3.0, 0.0, 3.0);
 
 
 		glEnd();

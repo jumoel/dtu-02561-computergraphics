@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hardwareshading", "hardwareshading.vcproj", "{7F3F0C2B-D897-4F16-A5DC-C3752C091D7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F3F0C2B-D897-4F16-A5DC-C3752C091D7C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7F3F0C2B-D897-4F16-A5DC-C3752C091D7C}.Debug|Win32.Build.0 = Debug|Win32
+		{7F3F0C2B-D897-4F16-A5DC-C3752C091D7C}.Release|Win32.ActiveCfg = Release|Win32
+		{7F3F0C2B-D897-4F16-A5DC-C3752C091D7C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

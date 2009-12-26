@@ -1,0 +1,54 @@
+
+\chapter{Ugeopgave 8}
+\label{cha:ugeopgave-8}
+
+\section{Part 1}
+
+Når vi compiler programmet fra start får vi en animation der ser sådan ud.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise8/screenshots/1.png}
+\caption{Det udleverede program}
+\label{fig:8-1-1}
+\end{figure}
+
+
+\section{Part 2}
+
+Vi skal nu implementere 2 funktioner:
+
+\texttt{set_from_light_perspective(...)}\\
+Funktionen laver en ``perspective projection'' som passer til objektet ud fra dens ``bouding sphere''.
+
+
+\texttt{init_proj_shadow_texture(...)}\\
+Initialiserer en texture som indeholder skyggen, opretter et texture name og opsætter filters.
+
+\section{Part 3}
+
+\texttt{make_proj_shadow_texture(...) }
+
+Thepotten renderes fra lyskilden og kopierer framebufferen til en textur.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise8/screenshots/3.png}
+\caption{Skyggen}
+\label{fig:8-3-1}
+\end{figure}
+
+\section{Part 4}
+
+\texttt{draw_proj_shadow(...)}
+
+Til sidst sættes det hele sammen. Farven i frame bufferen blandes med texturen.
+
+Der er tilføjet et clipping plane, så skyggen ikke bliver vist hvis thepotten er under gulvet. Dette skal bruges i exercise 10.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise8/screenshots/4.png}
+\caption{Det færdige program}
+\label{fig:4-3-1}
+\end{figure}

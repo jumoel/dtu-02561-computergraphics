@@ -1,0 +1,11 @@
+<Resource>
+ <Values
+				 file_name="Teddybear.raw"
+				 slice_width="128" 
+				 slice_height="128" 
+				 slices="62"
+				 x_scaling="1.0f"
+				 y_scaling="1.0f" 
+				 z_scaling="1.3f"
+				 />
+</Resource>

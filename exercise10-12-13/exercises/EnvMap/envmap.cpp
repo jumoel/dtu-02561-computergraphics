@@ -166,7 +166,7 @@ void init(void)
   }
 
   for (int i = 0; i < 6; i++) {
-    glTexImage2D(faceTarget[i], 0, GL_RGB, 128, 128, 0, GL_RGB, GL_BYTE, faces[i]);
+    glTexImage2D(faceTarget[i], 0, GL_RGB, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, faces[i]);
   }
 
   //create normalmap

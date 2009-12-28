@@ -111,17 +111,47 @@ void init(void)
 	glClearColor(1,0,0,0);
 	glEnable(GL_DEPTH_TEST);
 
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
 	//create cube map
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glEnable(GL_TEXTURE_GEN_R);
 	glEnable(GL_TEXTURE_CUBE_MAP);
 
-	const char* cube_fn[] = {	"textures/cm_left.ppm", 
-								"textures/cm_right.ppm", 
-								"textures/cm_top.ppm", 
-								"textures/cm_bottom.ppm", 
-								"textures/cm_back.ppm", 
-								"textures/cm_front.ppm" };
+    static GLenum faceTarget[6] = {
+        GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+    };
 
-	//TODO
+    char *cube_fn[] = {
+        "textures/cm_left.ppm", 
+        "textures/cm_right.ppm", 
+        "textures/cm_top.ppm", 
+        "textures/cm_bottom.ppm", 
+        "textures/cm_back.ppm", 
+        "textures/cm_front.ppm" };
+
+    int wi = 128, he = 128;
+    void *faces[6];
+
+    for (int i = 0; i < 6; i++) {
+        faces[i] = load_ppm(cube_fn[i], wi, he);
+    }
+
+    for (int i = 0; i < 6; i++) {
+        glTexImage2D(faceTarget[i], 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)faces[i]);
+    }
 
 	//create normalmap
 	const char* normalmap_fn = "textures/normalmap.ppm";

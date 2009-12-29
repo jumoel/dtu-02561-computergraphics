@@ -1,14 +1,16 @@
 uniform vec3 camera;
 
-const float pi = 3.14159;
+uniform samplerCube texMap;
 
-//useful debug function
-vec3 vec2col(in vec3 v)
-{
-	return (v+1.) * 0.5;
-}
+varying vec3 position;
+varying vec3 normal;
 
-void main(void)
+void main()
 {
-	gl_FragColor = vec4(0,1,0,1);
+  vec3 n = normalize(normal);
+  vec3 i = -normalize(camera-position);
+  
+  vec3 rv = reflect(i, n);
+  
+  gl_FragColor = textureCube(texMap, rv);
 }

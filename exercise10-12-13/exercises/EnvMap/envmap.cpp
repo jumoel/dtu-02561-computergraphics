@@ -10,6 +10,8 @@
 
 #include "Graphics/TrackBall.h" 
 
+#define TEX_SIZE 128
+
 using namespace CGLA;
 using namespace GFX;
 
@@ -21,6 +23,8 @@ static GLuint background;
 static GLuint glass;
 static GLuint normalmap;
 GLuint tex;
+GLuint texMapLocation[2];
+GLuint camerapos;
 
 void display() {
 
@@ -35,25 +39,25 @@ void display() {
   //get camera position
   Vec3f eye, at, up;
   ball->get_view_param(eye, at, up);
-
+  GLfloat eyef[3] = { (GLfloat)eye[0], (GLfloat)eye[1], (GLfloat)eye[2] };
+  
   //draw skybox
   glUseProgram(background);
-
-  GLuint texMapLocation;
-  texMapLocation = glGetUniformLocation(background, "texMap");
-  glUniform1i(texMapLocation,0);
-
-  
-  glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+  texMapLocation[0] = glGetUniformLocation(background, "texMap");
+  glUniform1i(texMapLocation[0],0);
 
   glutSolidCube(20.);
 
   //draw object
   glUseProgram(glass);
+  texMapLocation[1] = glGetUniformLocation(glass, "texMap");
+  glUniform1i(texMapLocation[1],0);
+  camerapos = glGetUniformLocation(glass, "camera");
+  glUniform3f(camerapos, eyef[0], eyef[1], eyef[2]);
 
   //glutSolidTeapot(1.f);
-  //glutSolidSphere(1.f, 32, 32);
-  glutSolidTorus(0.5, 1., 32, 32);
+  glutSolidSphere(1.0, 32, 32);
+  //glutSolidTorus(0.5, 1., 32, 32);
 
   glUseProgram(0);
   glutSwapBuffers();
@@ -120,36 +124,6 @@ void init(void)
   glClearColor(1,0,0,0);
   glEnable(GL_DEPTH_TEST);
 
-  
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
-
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  //create cube map
-  glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-  glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-  glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-  glEnable(GL_TEXTURE_GEN_S);
-  glEnable(GL_TEXTURE_GEN_T);
-  glEnable(GL_TEXTURE_GEN_R);
-  glEnable(GL_TEXTURE_CUBE_MAP);
-
-
-  static GLenum faceTarget[6] = {
-    GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-    GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-    GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-    GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-    GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-    GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
-  };
-
   char *cube_fn[] = {
     "textures/cm_left.ppm", 
     "textures/cm_right.ppm", 
@@ -158,16 +132,29 @@ void init(void)
     "textures/cm_back.ppm", 
     "textures/cm_front.ppm" };
 
-  int wi = 128, he = 128;
-  void *faces[6];
+  glEnable(GL_TEXTURE_GEN_S);
+  glEnable(GL_TEXTURE_GEN_T);
+  glEnable(GL_TEXTURE_GEN_R);
+  glEnable(GL_TEXTURE_CUBE_MAP);
+
+  glGenTextures(1, &tex);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
   for (int i = 0; i < 6; i++) {
-    faces[i] = load_ppm(cube_fn[i], wi, he);
+    int wi, he;
+
+    void *data = load_ppm(cube_fn[i], wi, he);
+
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT + i, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+    free(data);
   }
 
-  for (int i = 0; i < 6; i++) {
-    glTexImage2D(faceTarget[i], 0, GL_RGB, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, faces[i]);
-  }
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   //create normalmap
   const char* normalmap_fn = "textures/normalmap.ppm";

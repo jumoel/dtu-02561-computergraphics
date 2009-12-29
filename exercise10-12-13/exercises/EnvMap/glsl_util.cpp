@@ -1,5 +1,6 @@
 #include "glsl_util.hpp"
 
+#include <stdio.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
@@ -45,6 +46,7 @@ void check_gl_error(void)
         return;
 
     printf("ERROR: %s\n", gluErrorString(err));
+    getchar(); // Let me read the error, goddamnit
     exit(-1);
 }
 

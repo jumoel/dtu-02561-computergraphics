@@ -78,7 +78,7 @@ GLuint create_shader(GLenum type, const char* fn)
 		glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &len);
 		char* log = (char*)malloc(len);	
 		glGetShaderInfoLog(handle, len, NULL, log); 
-		printf(log); free(log); exit(-1);
+		printf(log); free(log); getchar(); exit(-1);
 	}
 	return handle;
 }
@@ -105,7 +105,7 @@ GLuint create_program(const char* vs, const char* fs)
 		glGetProgramiv(prg, GL_INFO_LOG_LENGTH, &len);
 		char* log = (char*)malloc(len);	
 		glGetProgramInfoLog(prg, len, NULL, log); 
-		printf(log); free(log); exit(-1);
+		printf(log); free(log); getchar(); exit(-1);
 	}
 	return prg;
 }

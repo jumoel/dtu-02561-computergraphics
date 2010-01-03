@@ -14,9 +14,6 @@
 		/>
 	</Platforms>
 	<ToolFiles>
-		<ToolFile
-			RelativePath="..\..\..\..\..\vs-rulefiles\cp-frag-and-vert.rules"
-		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -30,13 +27,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Copy *.frag"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="Copy *.vert"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -111,13 +102,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Copy *.frag"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="Copy *.vert"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"

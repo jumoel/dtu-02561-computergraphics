@@ -24,6 +24,7 @@ static GLuint glass;
 static GLuint normalmap;
 GLuint tex;
 GLuint texMapLocation[2];
+GLuint refraction;
 GLuint camerapos;
 
 void display() {
@@ -52,8 +53,12 @@ void display() {
   glUseProgram(glass);
   texMapLocation[1] = glGetUniformLocation(glass, "texMap");
   glUniform1i(texMapLocation[1],0);
+  // Send the cameraposition to the shader
   camerapos = glGetUniformLocation(glass, "camera");
   glUniform3f(camerapos, eyef[0], eyef[1], eyef[2]);
+
+  refraction = glGetUniformLocation(glass, "refraction");
+  glUniform1f(refraction, 0.5);
 
   //glutSolidTeapot(1.f);
   glutSolidSphere(1.0, 32, 32);
@@ -163,6 +168,7 @@ void init(void)
 
   //create shaders
   background = create_program("background.vert", "background.frag");
+  
   glass = create_program("glass.vert", "glass.frag");
 
   check_gl_error();
@@ -186,6 +192,7 @@ int main(int argc, char** argv)
   init();
 
   glutMainLoop();
+
   return 0;
 }
 

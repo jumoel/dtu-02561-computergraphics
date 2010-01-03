@@ -1,16 +1,13 @@
-uniform vec3 camera;
-
 uniform samplerCube texMap;
 
-varying vec3 position;
-varying vec3 normal;
+varying vec3 rv;
+varying vec3 rf;
+varying float r;
 
 void main()
 {
-  vec3 n = normalize(normal);
-  vec3 i = -normalize(camera-position);
-  
-  vec3 rv = reflect(i, n);
-  
-  gl_FragColor = textureCube(texMap, rv);
+  vec4 reflectcolor = textureCube(texMap, rv);
+  vec4 refractcolor = textureCube(texMap, rf);
+      
+  gl_FragColor = r * reflectcolor + (1.0 - r) * refractcolor;
 }

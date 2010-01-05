@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="EnvMap"
 	ProjectGUID="{A63099B4-3A23-439D-BD7E-8D88ED900F4C}"
 	RootNamespace="EnvMap"
@@ -119,7 +119,7 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -139,6 +139,7 @@
 				AdditionalDependencies="util2561.lib expat.lib glew32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../lib/windows"
+				IgnoreDefaultLibraryNames="libcp.lib;libc.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

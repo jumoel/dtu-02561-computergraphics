@@ -1,5 +1,6 @@
 #include "glsl_util.hpp"
 
+#include <stdio.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cassert>
@@ -45,6 +46,7 @@ void check_gl_error(void)
         return;
 
     printf("ERROR: %s\n", gluErrorString(err));
+    getchar(); // Let me read the error, goddamnit
     exit(-1);
 }
 
@@ -76,7 +78,7 @@ GLuint create_shader(GLenum type, const char* fn)
 		glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &len);
 		char* log = (char*)malloc(len);	
 		glGetShaderInfoLog(handle, len, NULL, log); 
-		printf(log); free(log); exit(-1);
+		printf(log); free(log); getchar(); exit(-1);
 	}
 	return handle;
 }
@@ -103,7 +105,7 @@ GLuint create_program(const char* vs, const char* fs)
 		glGetProgramiv(prg, GL_INFO_LOG_LENGTH, &len);
 		char* log = (char*)malloc(len);	
 		glGetProgramInfoLog(prg, len, NULL, log); 
-		printf(log); free(log); exit(-1);
+		printf(log); free(log); getchar(); exit(-1);
 	}
 	return prg;
 }

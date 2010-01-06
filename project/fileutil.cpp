@@ -20,11 +20,20 @@ void save_file(char *filename,
        compiter != components->end();
        compiter++) {
 
-         fprintf(file, "%d %d %d %d %f %f\n",
-           compiter->type,
-           compiter->tx, compiter->ty,
-           compiter->rx,
-           compiter->sx, compiter->sy);
+         switch (compiter->type) {
+           case wire:
+             fprintf(file, "%d %d %d %d %d\n",
+             compiter->type,
+             compiter->tx, compiter->ty,
+             compiter->x2, compiter->y2);
+             break;
+           default:
+             fprintf(file, "%d %d %d %d %f %f\n",
+             compiter->type,
+             compiter->tx, compiter->ty,
+             compiter->rx,
+             compiter->sx, compiter->sy);
+         }
 
   }
 

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
+#include <algorithm>
 
 #include "GL/glut.h"
 
@@ -33,6 +34,8 @@ static int my = 0; //mouse position y
 
 static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
+static int mcx_old = 0; //mouse click position x
+static int mcy_old = 0; //mouse click position y
 
 static program_settings_t settings;
 
@@ -64,9 +67,12 @@ void draw_components(GLenum mode)
     }
 
     glPushMatrix();
+
     glTranslatef(c.tx, c.ty, 0.0);
-    glRotatef(c.rx, 0.0, 0.0, 1.0);
-    glScalef(c.sx, c.sy, 1.0);
+    if (c.type != wire) {
+      glRotatef(c.rx, 0.0, 0.0, 1.0);
+      glScalef(c.sx, c.sy, 1.0);
+    }
 
 		switch (c.type) {
 			case capacitor:
@@ -79,11 +85,11 @@ void draw_components(GLenum mode)
 				draw_transistor(c);
 				break;
       case wire:
-        //draw_wire(c);
+        draw_wire(c);
         break;
 		}
 
-        glPopMatrix();
+    glPopMatrix();
 	}
 }
 
@@ -117,6 +123,9 @@ void motion(int x, int y)
   x = transform_x(x);
   y = transform_y(y);
 
+  
+  printf("mx: %d - my: %d\n", x, y);
+
 	// This function is called when the mouse is moved.
 	// Handle translation, rotation and scaling of the
 	// selected component here.
@@ -124,8 +133,15 @@ void motion(int x, int y)
     // Scale
     if (selected != -1) {
         if (ctrl_down) {
-            components[selected].sx = mcx;
-            components[selected].sy = mcy;
+
+          // Prevent objects disappearing
+          int deltax = mcx - mx;
+          int deltay = mcy - mx;
+          if (deltax == 0) deltax = 1;
+          if (deltay == 0) deltay = 1;
+
+          components[selected].sx = ((deltax / 5.0));
+          components[selected].sy = ((deltay / 5.0));
         }
         else if (shift_down) {
             int dx = x - mcx;
@@ -139,15 +155,15 @@ void motion(int x, int y)
     }
 
 	//save mouse position for later
-	mx = x; my = y;
+	mcx = x; mcy = y;
 
 	glutPostRedisplay();
 }
 
 void passivemotion(int x, int y)
 {
-	mx = transform_x(x);;
-  my = transform_y(y);;
+	mx = transform_x(x);
+  my = transform_y(y);
 }
 
 void mouse(int button, int state, int x, int y)
@@ -231,8 +247,8 @@ void update_ortho() {
   glViewport(0, 0, settings.width, settings.height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-  gluOrtho2D(-(settings.width / settings.zoom) / 2 + settings.x_displ,
-              (settings.width / settings.zoom) / 2 + settings.x_displ,
+  gluOrtho2D(-(settings.width / settings.zoom)  / 2 + settings.x_displ,
+              (settings.width / settings.zoom)  / 2 + settings.x_displ,
              -(settings.height / settings.zoom) / 2 + settings.y_displ,
               (settings.height / settings.zoom) / 2 + settings.y_displ);
 	glMatrixMode(GL_MODELVIEW);

@@ -1,47 +1,41 @@
 #include <cassert>
 #include <cmath>
-#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "GL/glut.h"
 
+#include "components.h"
+#include "fileutil.h"
+
 //size of selection buffer
 #define BUFSIZE 512
 
-enum component_type
+enum save_files
 {
-	capacitor,
-	resistor,
-	transistor
+	file_autosave,
+  file_manualsave
 };
-
-struct component_t
-{
-	component_t(int t=0, int x=0, int y=0) : type(t), tx(x), ty(y), rx(0), sx(1), sy(1) {}
-
-	int type;		//type of component
-	int tx, ty;		//translation
-	int rx;			//rotation in degrees
-	float sx, sy;	//scale
-};
-
-static int width, height;
-static bool ctrl_down = false;
-static bool alt_down = false;
-static bool shift_down = false;
-
-static int mx = 0; //mouse position x
-static int my = 0; //mouse position y
-
-static int mcx = 0; //mouse click position x
-static int mcy = 0; //mouse click position y
 
 //list with current components
 static std::vector<component_t> components;
 
 //index of select components in above list, -1 means nothing is selected
 static int selected = -1;
+
+static int width, height;
+static bool ctrl_down = false;
+static bool alt_down = false;
+static bool shift_down = false;
+
+static char *manualsave = "circuit.ccd";
+static char *autosave = "autosave.ccd";
+
+static int mx = 0; //mouse position x
+static int my = 0; //mouse position y
+
+static int mcx = 0; //mouse click position x
+static int mcy = 0; //mouse click position y
 
 void draw_capacitor(component_t comp)
 {
@@ -299,43 +293,79 @@ void reshape(int w, int h)
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key) 
-	{
-	case 27:
-  
-		FILE * pFile;
+  switch (key) {
+    case 19: // CTRL-S or CTRL-s
+        save_components(manualsave, &components);
+        printf("File saved as %s\n", manualsave);
+      break;
 
-	for (size_t i=0; i<components.size(); ++i)
-	{
-		const component_t& c = components[i];
+    case 27:
+    case 'q':
+    case 'Q':
+	    exit(0);
+	    break;
+  }
 
-
-	char buffer[] = {}; //sammensæt components.
-		pFile = fopen ( "myfile.txt" , "wb" );
-		fwrite (buffer , 1 , sizeof(buffer) , pFile );
-
-	}
-
-  fclose (pFile);
-		  exit(0);
-		  break;
-	}
-//component_t(int t=0, int x=0, int y=0) : type(t), tx(x), ty(y), rx(0), sx(1), sy(1) {}
 	glutPostRedisplay();
 }
 
-void menu(int c)
+void special_keyboard(int key, int x, int y)
+{
+  int mod = glutGetModifiers();
+  switch (key) {
+    case GLUT_KEY_F4:
+      if (mod == GLUT_ACTIVE_ALT)
+        exit(0);
+      break;
+    
+  }
+
+	glutPostRedisplay();
+}
+
+void add_component(int c)
 {
 	components.push_back(component_t(c,mx,my));
 	glutPostRedisplay();
 }
 
+void create_menus() {
+  int compmenu = glutCreateMenu(add_component);
+	glutAddMenuEntry("Capacitor", capacitor); 
+  glutAddMenuEntry("Resistor", resistor); 
+	glutAddMenuEntry("Transistor", transistor);
+
+  int menu = glutCreateMenu(main_menu);
+  glutAddSubMenu("Insert ...", compmenu);
+  glutAddMenuEntry("Load standard save file", file_manualsave);
+  glutAddMenuEntry("Load automatic save file", file_autosave);
+
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void main_menu(int c) {
+  switch (c) {
+    case file_manualsave:
+      comp_parse_file(manualsave, &components);
+      break;
+
+    case file_autosave:
+      comp_parse_file(autosave, &components);
+      break;
+  }
+
+  glutPostRedisplay();
+}
+
+void autosave_file() {
+  save_components(autosave, &components);
+}
+
 int main(int argc, char** argv)
 {
-	//add some default components
-	components.push_back(component_t(capacitor, 40, 0));
-	components.push_back(component_t(resistor, 0, 0));
-	components.push_back(component_t(transistor, -40, 0));
+  comp_parse_file(autosave, &components);
+
+  atexit(autosave_file);
 
 	//setup glut
 	glutInit(&argc, argv);
@@ -343,17 +373,16 @@ int main(int argc, char** argv)
 	glutInitWindowSize(512, 512);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow(argv[0]);
-	glutCreateMenu(menu);
-	glutAddMenuEntry("New capacitor..",0); 
-	glutAddMenuEntry("New resistor..",1); 
-	glutAddMenuEntry("New transistor",2); 
-	glutAttachMenu(GLUT_RIGHT_BUTTON); 
+	
+  create_menus();
+
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display); 
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
-    glutPassiveMotionFunc(passivemotion);
+  glutPassiveMotionFunc(passivemotion);
 	glutKeyboardFunc(keyboard);
+  glutSpecialFunc(special_keyboard);
 	glutMainLoop();
 
 	return 0; 

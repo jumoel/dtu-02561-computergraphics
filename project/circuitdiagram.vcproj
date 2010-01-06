@@ -174,12 +174,28 @@
 				RelativePath=".\02561-04-04-2009.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\components.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fileutil.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\components.h"
+				>
+			</File>
+			<File
+				RelativePath=".\fileutil.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

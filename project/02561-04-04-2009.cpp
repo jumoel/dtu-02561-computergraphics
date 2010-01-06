@@ -7,6 +7,7 @@
 
 #include "components.h"
 #include "fileutil.h"
+#include "component_types.h"
 
 //size of selection buffer
 #define BUFSIZE 512
@@ -23,7 +24,6 @@ static std::vector<component_t> components;
 //index of select components in above list, -1 means nothing is selected
 static int selected = -1;
 
-static int width, height;
 static bool ctrl_down = false;
 static bool alt_down = false;
 static bool shift_down = false;
@@ -37,83 +37,24 @@ static int my = 0; //mouse position y
 static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
 
-static double zoom = 4.0;
+struct program_settings_t {
+  program_settings_t(double z = 4.0,
+                     int x = 0, int y = 0,
+                     int h = 512, int w = 512) : 
+                      zoom(z),
+                      x_displ(x), y_displ(y),
+                      height(h), width(w) {};
+  
+  double zoom;
+  int x_displ;
+  int y_displ;
+  int height;
+  int width;
+};
+
+static program_settings_t settings;
+
 static const double zoomfactor = 0.02;
-
-static int x_displacement = 0;
-static int y_displacement = 0;
-
-void draw_capacitor(component_t comp)
-{
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-13.0, 0.0);
-        glVertex2f(-1.0, 0.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-1.0, 5.0);
-        glVertex2f(-1.0, -5.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(1.0, 5.0);
-        glVertex2f(1.0, -5.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(13.0, 0.0);
-        glVertex2f(1.0, 0.0);
-    glEnd();
-}
-
-void draw_resistor(component_t comp)
-{
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-13.0, 0.0);
-        glVertex2f(-10.0, 0.0);
-        glVertex2f(-8.0, 4.0);
-        glVertex2f(-4.0, -4.0);
-        glVertex2f(0.0, 4.0);
-        glVertex2f(4.0, -4.0);
-        glVertex2f(8.0, 4.0);
-        glVertex2f(10.0, 0.0);
-        glVertex2f(13.0, 0.0);
-    glEnd();
-}
-
-void draw_transistor(component_t comp)
-{
-    int radius = 8;
-
-    glBegin(GL_LINE_STRIP);
-        for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
-            glVertex2f(radius * cos(angle),
-                       radius * sin(angle));
-        }
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-10.0, 0.0);
-        glVertex2f(-2.0, 0.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-2.0, 5.0);
-        glVertex2f(-2.0, -5.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(4.0, 12.0);
-        glVertex2f(4.0, 5.0);
-        glVertex2f(-2.0, 2.0);
-    glEnd();
-
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(4.0, -12.0);
-        glVertex2f(4.0, -5.0);
-        glVertex2f(-2.0, -2.0);
-    glEnd();
-}
 
 void draw_components(GLenum mode)
 {
@@ -175,8 +116,8 @@ int get_id(int hits, GLuint buffer[])
 
 void motion(int x, int y)
 {
-	x = x/2 - width/4;
-	y = (height-y-1)/2 - height/4;
+	x = x/2 - settings.width/4;
+	y = (settings.height-y-1)/2 - settings.height/4;
 
 	//TODO: This function is called when the mouse is moved.
 	//      Handle translation, rotation and scaling of the
@@ -207,8 +148,8 @@ void motion(int x, int y)
 
 void passivemotion(int x, int y)
 {
-	x = x/2 - width/4;
-	y = (height-y-1)/2 - height/4;
+	x = x/2 - settings.width/4;
+	y = (settings.height-y-1)/2 - settings.height/4;
 
 	mx = x; my = y;
 }
@@ -221,8 +162,8 @@ void mouse(int button, int state, int x, int y)
 	shift_down = (glutGetModifiers() & GLUT_ACTIVE_SHIFT) != 0;
 
     if(button == GLUT_LEFT_BUTTON) {
-        mcx = x/2 - width/4;
-	    mcy = (height-y-1)/2 - height/4;
+      mcx = x/2 - settings.width/4;
+	    mcy = (settings.height-y-1)/2 - settings.height/4;
     }
 
     if (selected != -1)
@@ -258,7 +199,8 @@ void mouse(int button, int state, int x, int y)
     /*  create 16x16 pixel picking region near cursor location	*/
     gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 
               16.0, 16.0, viewport);
-    gluOrtho2D (-width/4, width/4, -height/4, height/4);
+    gluOrtho2D (-settings.width/4, settings.width/4,
+                -settings.height/4, settings.height/4);
     draw_components(GL_SELECT);
 
     glMatrixMode(GL_PROJECTION);
@@ -287,24 +229,28 @@ void reshape(int w, int h)
 	glColor3f(0.f, 0.f, 0.f);
 	glLineWidth(2.f);
 
-	width = w; height = h;
+	settings.width = w; settings.height = h;
 
-	glViewport(0, 0, w, h);
+	glViewport(0, 0, settings.width, settings.height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-  gluOrtho2D(-w / zoom, w / zoom, -h / zoom, h / zoom);
+  gluOrtho2D(-settings.width / settings.zoom,
+              settings.width / settings.zoom,
+             -settings.height / settings.zoom,
+              settings.height / settings.zoom);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
 void update_ortho() {
-  glViewport(0, 0, width, height);
+  glViewport(0, 0, settings.width, settings.height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-  gluOrtho2D(-width / zoom  + x_displacement,
-              width / zoom  + x_displacement,
-             -height / zoom + y_displacement,
-              height / zoom + y_displacement);
+  gluOrtho2D(-settings.width / settings.zoom  + settings.x_displ,
+              settings.width / settings.zoom  + settings.x_displ,
+             -settings.height / settings.zoom + settings.y_displ,
+              settings.height / settings.zoom + settings.y_displ);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -317,11 +263,11 @@ void keyboard(unsigned char key, int x, int y)
       break;
 
     case '+':
-      zoom += zoomfactor * zoom;
+      settings.zoom += zoomfactor * settings.zoom;
       update_ortho();
       break;
     case '-':
-      zoom -= zoomfactor * zoom;
+      settings.zoom -= zoomfactor * settings.zoom;
       update_ortho();
 
       break;
@@ -346,19 +292,19 @@ void special_keyboard(int key, int x, int y)
       break;
 
     case GLUT_KEY_UP:
-      y_displacement -= 1;
+      settings.y_displ -= 1;
       update_ortho();
       break;
     case GLUT_KEY_DOWN:
-      y_displacement += 1;
+      settings.y_displ += 1;
       update_ortho();
       break;
     case GLUT_KEY_LEFT:
-      x_displacement += 1;
+      settings.x_displ += 1;
       update_ortho();
       break;
     case GLUT_KEY_RIGHT:
-      x_displacement -= 1;
+      settings.x_displ -= 1;
       update_ortho();
       break;
 

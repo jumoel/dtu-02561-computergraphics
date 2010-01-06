@@ -38,6 +38,9 @@ void comp_parse_file(char *filename, std::vector<component_t> *components) {
 
   components->clear();
 
+  if (fgets (line, sizeof(line), file) != NULL) {
+  }
+
   while(fgets (line, sizeof(line), file) != NULL) {
     components->push_back(comp_parse_line(line));
   }

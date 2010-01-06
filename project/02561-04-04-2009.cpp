@@ -14,6 +14,8 @@
 //size of selection buffer
 #define BUFSIZE 512
 
+#define MAGIC_NUMBER 1000
+
 
 
 //list with current components
@@ -57,14 +59,10 @@ void draw_components(GLenum mode)
 		const component_t& c = components[i];
 
 		//draw selected component in different color
-		if (selected == i)
+		if (selected % MAGIC_NUMBER == i)
 			glColor3f(1,0,0);
 		else
 			glColor3f(0,0,0);
-
-    if (mode == GL_SELECT) {
-      glLoadName(i);
-    }
 
     glPushMatrix();
 
@@ -76,16 +74,16 @@ void draw_components(GLenum mode)
 
 		switch (c.type) {
 			case capacitor:
-				draw_capacitor(c);
+				draw_capacitor(c, i);
 				break;
 			case resistor:
-				draw_resistor(c);
+				draw_resistor(c, i);
 				break;
 			case transistor:
-				draw_transistor(c);
+				draw_transistor(c, i);
 				break;
       case wire:
-        draw_wire(c);
+        draw_wire(c, i);
         break;
 		}
 
@@ -105,11 +103,12 @@ int get_id(int hits, GLuint buffer[])
     for (int i = 0; i < hits; i++)
     {
         names = *ptr;
+        printf("Names: %d\n", names);
         ptr = ptr + 3;
  
         for (int j = 0; j < names; j++)
         {
-          //printf("Found: %d\n", ptr[j]);
+          printf("Found: %d\n", ptr[j]);
         }
 
         return *(ptr++);
@@ -123,15 +122,14 @@ void motion(int x, int y)
   x = transform_x(x);
   y = transform_y(y);
 
-  
-  printf("mx: %d - my: %d\n", x, y);
-
 	// This function is called when the mouse is moved.
 	// Handle translation, rotation and scaling of the
 	// selected component here.
 
-    // Scale
     if (selected != -1) {
+      component_t &c = components[selected % MAGIC_NUMBER];
+
+        // Scale
         if (ctrl_down) {
 
           // Prevent objects disappearing
@@ -140,20 +138,39 @@ void motion(int x, int y)
           if (deltax == 0) deltax = 1;
           if (deltay == 0) deltay = 1;
 
-          components[selected].sx = ((deltax / 5.0));
-          components[selected].sy = ((deltay / 5.0));
+          c.sx = ((deltax / 5.0));
+          c.sy = ((deltay / 5.0));
         }
+
+        // Rotation
         else if (shift_down) {
             int dx = mcx - mx;
 
             if (rotate_old == 0)
-              rotate_old = components[selected].rx;
+              rotate_old = c.rx;
 
-            components[selected].rx = rotate_old + dx * 4;
+            c.rx = rotate_old + dx * 4;
         }
+
+        // Move stuff
         else {
-          components[selected].tx = x + settings.x_displ;
-          components[selected].ty = y + settings.y_displ;
+         if (selected / MAGIC_NUMBER == 0 && c.type != wire) {
+
+            c.tx = x + settings.x_displ;
+            c.ty = y + settings.y_displ;
+         } else if (selected / MAGIC_NUMBER == 0 && c.type == wire) {
+            c.tx = x;
+            c.ty = y;
+         } else {
+           int end = selected / MAGIC_NUMBER;
+           if (end == 1) {
+             c.x1 = x - c.tx + settings.x_displ;
+             c.y1 = y - c.ty + settings.y_displ;
+           } else {
+             c.x2 = x - c.tx + settings.x_displ;
+             c.y2 = y - c.ty + settings.y_displ;
+           }
+         }
         }
     }
 
@@ -179,13 +196,11 @@ void mouse(int button, int state, int x, int y)
   if(button == GLUT_LEFT_BUTTON) {
     mcx = transform_x(x);
     mcy = transform_y(y);
-
-    printf("x: %d - y: %d\n", mcx, mcy);
   }
 
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
     if (selected != -1) {
-      rotate_old = components[selected].rx;
+      rotate_old = components[selected % MAGIC_NUMBER].rx;
     } else {
       rotate_old = 0;
     }
@@ -215,7 +230,6 @@ void mouse(int button, int state, int x, int y)
   glRenderMode(GL_SELECT);
 
   glInitNames();
-  glPushName(0);
 
   glMatrixMode (GL_PROJECTION);
   glPushMatrix ();
@@ -241,7 +255,7 @@ void mouse(int button, int state, int x, int y)
   selected = get_id(hits, selectBuf);
 
   // Deletes the selected component if [ALT] is held down
-  if (alt_down) { components.erase(components.begin() + selected); selected = -1; }
+  if (alt_down) { components.erase(components.begin() + selected % MAGIC_NUMBER); selected = -1; }
 
 	glutPostRedisplay();
 } 
@@ -369,6 +383,7 @@ void create_menus() {
 	glutAddMenuEntry("Capacitor", capacitor); 
   glutAddMenuEntry("Resistor", resistor); 
 	glutAddMenuEntry("Transistor", transistor);
+  glutAddMenuEntry("Wire", wire);
 
   int menu = glutCreateMenu(main_menu);
   glutAddSubMenu("Insert ...", compmenu);

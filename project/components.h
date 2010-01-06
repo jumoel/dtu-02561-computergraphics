@@ -19,10 +19,12 @@ struct component_t
               tx(x), ty(y),
               rx(0),
               sx(1), sy(1),
+              x1(1), y1(0),
               x2(1), y2(0) {}
 
 	int type;		//type of component
 	int tx, ty;		//translation
+  int x1, y1; // start points for wires
   int x2, y2; // end points for wires
 	int rx;			//rotation in degrees
 	float sx, sy;	//scale

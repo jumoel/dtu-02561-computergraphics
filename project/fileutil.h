@@ -14,7 +14,7 @@
  * <int type> <int x> <int y> <int rotation> <float scalex> <float scaley>
  *
  * - wires
- * <int type> <int x1> <int y1> <int x2> <int y2>
+ * <int type> <int x> <int y> <int x1> <int y1> <int x2> <int y2>
  */
 void save_file(char *filename,
                std::vector<component_t> *components,

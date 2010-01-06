@@ -37,6 +37,12 @@ static int my = 0; //mouse position y
 static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
 
+static double zoom = 4.0;
+static const double zoomfactor = 0.02;
+
+static int x_displacement = 0;
+static int y_displacement = 0;
+
 void draw_capacitor(component_t comp)
 {
     glBegin(GL_LINE_STRIP);
@@ -286,9 +292,20 @@ void reshape(int w, int h)
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-w/4, w/4, -h/4, h/4);
+  gluOrtho2D(-w / zoom, w / zoom, -h / zoom, h / zoom);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void update_ortho() {
+  glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+  gluOrtho2D(-width / zoom  + x_displacement,
+              width / zoom  + x_displacement,
+             -height / zoom + y_displacement,
+              height / zoom + y_displacement);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -299,6 +316,16 @@ void keyboard(unsigned char key, int x, int y)
         printf("File saved as %s\n", manualsave);
       break;
 
+    case '+':
+      zoom += zoomfactor * zoom;
+      update_ortho();
+      break;
+    case '-':
+      zoom -= zoomfactor * zoom;
+      update_ortho();
+
+      break;
+   
     case 27:
     case 'q':
     case 'Q':
@@ -317,6 +344,24 @@ void special_keyboard(int key, int x, int y)
       if (mod == GLUT_ACTIVE_ALT)
         exit(0);
       break;
+
+    case GLUT_KEY_UP:
+      y_displacement -= 1;
+      update_ortho();
+      break;
+    case GLUT_KEY_DOWN:
+      y_displacement += 1;
+      update_ortho();
+      break;
+    case GLUT_KEY_LEFT:
+      x_displacement += 1;
+      update_ortho();
+      break;
+    case GLUT_KEY_RIGHT:
+      x_displacement -= 1;
+      update_ortho();
+      break;
+
     
   }
 
@@ -327,20 +372,6 @@ void add_component(int c)
 {
 	components.push_back(component_t(c,mx,my));
 	glutPostRedisplay();
-}
-
-void create_menus() {
-  int compmenu = glutCreateMenu(add_component);
-	glutAddMenuEntry("Capacitor", capacitor); 
-  glutAddMenuEntry("Resistor", resistor); 
-	glutAddMenuEntry("Transistor", transistor);
-
-  int menu = glutCreateMenu(main_menu);
-  glutAddSubMenu("Insert ...", compmenu);
-  glutAddMenuEntry("Load standard save file", file_manualsave);
-  glutAddMenuEntry("Load automatic save file", file_autosave);
-
-  glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 void main_menu(int c) {
@@ -355,6 +386,20 @@ void main_menu(int c) {
   }
 
   glutPostRedisplay();
+}
+
+void create_menus() {
+  int compmenu = glutCreateMenu(add_component);
+	glutAddMenuEntry("Capacitor", capacitor); 
+  glutAddMenuEntry("Resistor", resistor); 
+	glutAddMenuEntry("Transistor", transistor);
+
+  int menu = glutCreateMenu(main_menu);
+  glutAddSubMenu("Insert ...", compmenu);
+  glutAddMenuEntry("Load standard save file", file_manualsave);
+  glutAddMenuEntry("Load automatic save file", file_autosave);
+
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 void autosave_file() {

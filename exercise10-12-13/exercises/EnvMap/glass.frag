@@ -1,4 +1,5 @@
 uniform samplerCube texMap;
+uniform samplerCube normalMap;
 
 varying vec3 rv;
 varying vec3 rf;

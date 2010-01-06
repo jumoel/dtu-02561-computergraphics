@@ -22,8 +22,7 @@ static GLuint cubemap;
 static GLuint background;
 static GLuint glass;
 static GLuint normalmap;
-GLuint tex;
-GLuint texMapLocation[2];
+GLuint texMapLocation[3];
 GLuint refraction;
 GLuint camerapos;
 
@@ -53,6 +52,11 @@ void display() {
   glUseProgram(glass);
   texMapLocation[1] = glGetUniformLocation(glass, "texMap");
   glUniform1i(texMapLocation[1],0);
+
+  // Normal map location
+  texMapLocation[2] = glGetUniformLocation(glass, "normalMap");
+  glUniform1i(texMapLocation[2],1);
+
   // Send the cameraposition to the shader
   camerapos = glGetUniformLocation(glass, "camera");
   glUniform3f(camerapos, eyef[0], eyef[1], eyef[2]);
@@ -142,8 +146,8 @@ void init(void)
   glEnable(GL_TEXTURE_GEN_R);
   glEnable(GL_TEXTURE_CUBE_MAP);
 
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+  glGenTextures(1, &cubemap);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
   for (int i = 0; i < 6; i++) {
     int wi, he;
@@ -164,7 +168,15 @@ void init(void)
   //create normalmap
   const char* normalmap_fn = "textures/normalmap.ppm";
 
-  //TODO
+  glGenTextures(1, &normalmap);
+  glBindTexture(GL_NORMAL_MAP, normalmap);
+
+  int wi, he;
+  void *data = load_ppm(normalmap_fn, wi, he);
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT + i, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+  free(data);
 
   //create shaders
   background = create_program("background.vert", "background.frag");

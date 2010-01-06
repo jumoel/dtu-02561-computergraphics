@@ -1,11 +1,19 @@
 #include "fileutil.h"
 
-void save_components(char *filename, std::vector<component_t> *components) {
+void save_file(char *filename,
+               std::vector<component_t> *components,
+               program_settings_t *settings) {
+
   FILE *file;
   
   file = fopen(filename, "wb");
 
-  printf("Complength: %d\n", components->size());
+  fprintf(file, "%d %d %f %d %d\n",
+          settings->x_displ, settings->y_displ,
+          settings->zoom,
+          settings->width,
+          settings->height);
+
 
   std::vector<component_t>::iterator compiter;
   for (compiter = components->begin();

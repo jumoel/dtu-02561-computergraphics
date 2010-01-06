@@ -73,3 +73,27 @@ void draw_transistor(component_t comp)
         glVertex2f(-2.0, -2.0);
     glEnd();
 }
+
+void draw_wire(component_t comp)
+{
+  int radius = 2;
+
+  glBegin(GL_LINE_STRIP);
+    for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
+      glVertex2f(radius * cos(angle) - 5.0,
+                 radius * sin(angle) - 0.0);
+    }
+  glEnd();
+  
+  glBegin(GL_LINE_STRIP);
+    glVertex2f(-5.0, 0.0);
+    glVertex2f(5.0, 0.0);
+  glEnd();
+
+  glBegin(GL_LINE_STRIP);
+    for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
+      glVertex2f(radius * cos(angle) + 5.0,
+                 radius * sin(angle) + 0.0);
+    }
+  glEnd();
+}

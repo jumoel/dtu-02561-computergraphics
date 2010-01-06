@@ -8,15 +8,22 @@ enum component_type
 {
 	capacitor,
 	resistor,
-	transistor
+	transistor,
+  wire
 };
 
 struct component_t
 {
-	component_t(int t=0, int x=0, int y=0) : type(t), tx(x), ty(y), rx(0), sx(1), sy(1) {}
+	component_t(int t=0, int x=0, int y=0) : 
+              type(t),
+              tx(x), ty(y),
+              rx(0),
+              sx(1), sy(1),
+              x2(1), y2(0) {}
 
 	int type;		//type of component
 	int tx, ty;		//translation
+  int x2, y2; // end points for wires
 	int rx;			//rotation in degrees
 	float sx, sy;	//scale
 };

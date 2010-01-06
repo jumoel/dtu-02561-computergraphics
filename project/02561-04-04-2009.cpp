@@ -8,15 +8,12 @@
 #include "components.h"
 #include "fileutil.h"
 #include "component_types.h"
+#include "settings.h"
 
 //size of selection buffer
 #define BUFSIZE 512
 
-enum save_files
-{
-	file_autosave,
-  file_manualsave
-};
+
 
 //list with current components
 static std::vector<component_t> components;
@@ -37,21 +34,6 @@ static int my = 0; //mouse position y
 static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
 
-struct program_settings_t {
-  program_settings_t(double z = 4.0,
-                     int x = 0, int y = 0,
-                     int h = 512, int w = 512) : 
-                      zoom(z),
-                      x_displ(x), y_displ(y),
-                      height(h), width(w) {};
-  
-  double zoom;
-  int x_displ;
-  int y_displ;
-  int height;
-  int width;
-};
-
 static program_settings_t settings;
 
 static const double zoomfactor = 0.02;
@@ -69,11 +51,14 @@ void draw_components(GLenum mode)
 		else
 			glColor3f(0,0,0);
 
-        if (mode == GL_SELECT) glLoadName(i);
-        glPushMatrix();
-        glTranslatef(c.tx, c.ty, 0.0);
-        glRotatef(c.rx, 0.0, 0.0, 1.0);
-        glScalef(c.sx, c.sy, 1.0);
+    if (mode == GL_SELECT) {
+      glLoadName(i);
+    }
+
+    glPushMatrix();
+    glTranslatef(c.tx, c.ty, 0.0);
+    glRotatef(c.rx, 0.0, 0.0, 1.0);
+    glScalef(c.sx, c.sy, 1.0);
 
 		switch (c.type) {
 			case capacitor:
@@ -85,6 +70,9 @@ void draw_components(GLenum mode)
 			case transistor:
 				draw_transistor(c);
 				break;
+      case wire:
+        //draw_wire(c);
+        break;
 		}
 
         glPopMatrix();
@@ -93,6 +81,7 @@ void draw_components(GLenum mode)
 
 int get_id(int hits, GLuint buffer[])
 {
+  printf("Hits: %d\n", hits);
 	if (hits == 0)
 		return -1;
 
@@ -104,11 +93,14 @@ int get_id(int hits, GLuint buffer[])
     {
         names = *ptr;
         ptr = ptr + 3;
+        printf("Names: %d\n", names);
 
         for (int j = 0; j < names; j++)
         {
-            return *ptr;
+          //printf("Found: %d\n", ptr[j]);
         }
+
+        return *(ptr++);
     }
 
 	return -1;
@@ -116,8 +108,10 @@ int get_id(int hits, GLuint buffer[])
 
 void motion(int x, int y)
 {
-	x = x/2 - settings.width/4;
-	y = (settings.height-y-1)/2 - settings.height/4;
+	//x = x/2 - settings.width/4;
+	//y = (settings.height-y-1)/2 - settings.height/4;
+  x = x / settings.zoom;
+  y = (settings.height - y - 1) / settings.zoom;
 
 	//TODO: This function is called when the mouse is moved.
 	//      Handle translation, rotation and scaling of the
@@ -126,8 +120,8 @@ void motion(int x, int y)
     // Scale
     if (selected != -1) {
         if (ctrl_down) {
-            components[selected].sx = (x - mcx) / 2;
-            components[selected].sy = (y - mcy) / 2;
+            components[selected].sx = mcx;
+            components[selected].sy = mcy;
         }
         else if (shift_down) {
             int dx = x - mcx;
@@ -148,10 +142,13 @@ void motion(int x, int y)
 
 void passivemotion(int x, int y)
 {
+  /*
 	x = x/2 - settings.width/4;
 	y = (settings.height-y-1)/2 - settings.height/4;
+  */
 
-	mx = x; my = y;
+	mx = x / settings.zoom;
+  my = (settings.height - y - 1) / settings.zoom;
 }
 
 void mouse(int button, int state, int x, int y)
@@ -162,8 +159,9 @@ void mouse(int button, int state, int x, int y)
 	shift_down = (glutGetModifiers() & GLUT_ACTIVE_SHIFT) != 0;
 
     if(button == GLUT_LEFT_BUTTON) {
-      mcx = x/2 - settings.width/4;
-	    mcy = (settings.height-y-1)/2 - settings.height/4;
+      mcx = x / settings.zoom;
+      mcy = (settings.height - y - 1) / settings.zoom;
+      printf("x: %d - y: %d\n", mcx, mcy);
     }
 
     if (selected != -1)
@@ -196,11 +194,14 @@ void mouse(int button, int state, int x, int y)
     glMatrixMode (GL_PROJECTION);
     glPushMatrix ();
     glLoadIdentity ();
-    /*  create 16x16 pixel picking region near cursor location	*/
-    gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 
-              16.0, 16.0, viewport);
-    gluOrtho2D (-settings.width/4, settings.width/4,
-                -settings.height/4, settings.height/4);
+
+    gluPickMatrix((GLdouble) x,
+                  (GLdouble) (viewport[3] - y),
+                  16.0,
+                  16.0, viewport);
+    printf("Px: %f - Py: %f\n", (GLdouble) mcx, (GLdouble) mcy);
+    gluOrtho2D (0, settings.width / settings.zoom,
+                0, settings.height / settings.zoom);
     draw_components(GL_SELECT);
 
     glMatrixMode(GL_PROJECTION);
@@ -223,6 +224,22 @@ void display(void)
 	glutSwapBuffers();
 }
 
+void update_ortho() {
+  glutReshapeWindow(settings.width, settings.height);
+
+  glViewport(0, 0, settings.width, settings.height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+  gluOrtho2D(0,
+             settings.width / settings.zoom  + settings.x_displ,
+             0,
+             settings.height / settings.zoom + settings.y_displ);
+	glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  
+}
+
 void reshape(int w, int h)
 {
 	glClearColor(1.f,1.f,1.f,0.f);
@@ -231,34 +248,14 @@ void reshape(int w, int h)
 
 	settings.width = w; settings.height = h;
 
-	glViewport(0, 0, settings.width, settings.height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-  gluOrtho2D(-settings.width / settings.zoom,
-              settings.width / settings.zoom,
-             -settings.height / settings.zoom,
-              settings.height / settings.zoom);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void update_ortho() {
-  glViewport(0, 0, settings.width, settings.height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-  gluOrtho2D(-settings.width / settings.zoom  + settings.x_displ,
-              settings.width / settings.zoom  + settings.x_displ,
-             -settings.height / settings.zoom + settings.y_displ,
-              settings.height / settings.zoom + settings.y_displ);
-	glMatrixMode(GL_MODELVIEW);
+	update_ortho();
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
   switch (key) {
     case 19: // CTRL-S or CTRL-s
-        save_components(manualsave, &components);
+        save_file(manualsave, &components, &settings);
         printf("File saved as %s\n", manualsave);
       break;
 
@@ -324,10 +321,14 @@ void main_menu(int c) {
   switch (c) {
     case file_manualsave:
       comp_parse_file(manualsave, &components);
+      settings_parse_file(manualsave, &settings);
+      update_ortho();
       break;
 
     case file_autosave:
       comp_parse_file(autosave, &components);
+      settings_parse_file(autosave, &settings);
+      update_ortho();
       break;
   }
 
@@ -349,19 +350,20 @@ void create_menus() {
 }
 
 void autosave_file() {
-  save_components(autosave, &components);
+  save_file(autosave, &components, &settings);
 }
 
 int main(int argc, char** argv)
 {
   comp_parse_file(autosave, &components);
+  settings_parse_file(autosave, &settings);
 
   atexit(autosave_file);
 
 	//setup glut
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowSize(512, 512);
+  glutInitWindowSize(settings.width, settings.height);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow(argv[0]);
 	

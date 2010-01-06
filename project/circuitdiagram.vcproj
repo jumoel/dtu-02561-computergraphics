@@ -186,6 +186,10 @@
 				RelativePath=".\fileutil.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\settings.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -202,6 +206,10 @@
 			</File>
 			<File
 				RelativePath=".\fileutil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\settings.h"
 				>
 			</File>
 		</Filter>

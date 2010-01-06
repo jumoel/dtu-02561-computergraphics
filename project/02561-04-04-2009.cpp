@@ -34,8 +34,8 @@ static int my = 0; //mouse position y
 
 static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
-static int mcx_old = 0; //mouse click position x
-static int mcy_old = 0; //mouse click position y
+
+static int rotate_old = 0;
 
 static program_settings_t settings;
 
@@ -144,9 +144,12 @@ void motion(int x, int y)
           components[selected].sy = ((deltay / 5.0));
         }
         else if (shift_down) {
-            int dx = x - mcx;
+            int dx = mcx - mx;
 
-            components[selected].rx += dx / 4;
+            if (rotate_old == 0)
+              rotate_old = components[selected].rx;
+
+            components[selected].rx = rotate_old + dx * 4;
         }
         else {
           components[selected].tx = x + settings.x_displ;
@@ -176,7 +179,16 @@ void mouse(int button, int state, int x, int y)
   if(button == GLUT_LEFT_BUTTON) {
     mcx = transform_x(x);
     mcy = transform_y(y);
+
     printf("x: %d - y: %d\n", mcx, mcy);
+  }
+
+  if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    if (selected != -1) {
+      rotate_old = components[selected].rx;
+    } else {
+      rotate_old = 0;
+    }
   }
 
   if (selected != -1) {

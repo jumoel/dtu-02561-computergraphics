@@ -10,19 +10,20 @@ void settings_parse_file(char *filename, program_settings_t *settings) {
 
   if (fgets (line, sizeof(line), file) != NULL) {
     char *tok;
-    tok = strtok(line, " ");
+
+    tok = strtok(line, " "); if (tok == NULL) return;
     settings->x_displ = atoi(tok);
 
-    tok = strtok(NULL, " ");
+    tok = strtok(NULL, " "); if (tok == NULL) return;
     settings->y_displ = atoi(tok);
 
-    tok = strtok(NULL, " ");
+    tok = strtok(NULL, " "); if (tok == NULL) return;
     settings->zoom = atof(tok);
 
-    tok = strtok(NULL, " ");
+    tok = strtok(NULL, " "); if (tok == NULL) return;
     settings->width = atoi(tok);
 
-    tok = strtok(NULL, " ");
+    tok = strtok(NULL, " "); if (tok == NULL) return;
     settings->height = atoi(tok);
   }
 

@@ -38,6 +38,14 @@ static program_settings_t settings;
 
 static const double zoomfactor = 0.02;
 
+int transform_x(int x) {
+  return (x - settings.width/2) / settings.zoom;
+}
+
+int transform_y(int y) {
+  return (settings.height/2 - y - 1) / settings.zoom;
+}
+
 void draw_components(GLenum mode)
 {
 	//loop over components and draw them. Mode is either GL_RENDER or GL_SELECT
@@ -81,7 +89,6 @@ void draw_components(GLenum mode)
 
 int get_id(int hits, GLuint buffer[])
 {
-  printf("Hits: %d\n", hits);
 	if (hits == 0)
 		return -1;
 
@@ -93,8 +100,7 @@ int get_id(int hits, GLuint buffer[])
     {
         names = *ptr;
         ptr = ptr + 3;
-        printf("Names: %d\n", names);
-
+ 
         for (int j = 0; j < names; j++)
         {
           //printf("Found: %d\n", ptr[j]);
@@ -108,14 +114,12 @@ int get_id(int hits, GLuint buffer[])
 
 void motion(int x, int y)
 {
-	//x = x/2 - settings.width/4;
-	//y = (settings.height-y-1)/2 - settings.height/4;
-  x = x / settings.zoom;
-  y = (settings.height - y - 1) / settings.zoom;
+  x = transform_x(x);
+  y = transform_y(y);
 
-	//TODO: This function is called when the mouse is moved.
-	//      Handle translation, rotation and scaling of the
-	//      selected component here.
+	// This function is called when the mouse is moved.
+	// Handle translation, rotation and scaling of the
+	// selected component here.
 
     // Scale
     if (selected != -1) {
@@ -129,8 +133,8 @@ void motion(int x, int y)
             components[selected].rx += dx / 4;
         }
         else {
-            components[selected].tx = x;
-            components[selected].ty = y;
+          components[selected].tx = x + settings.x_displ;
+          components[selected].ty = y + settings.y_displ;
         }
     }
 
@@ -142,13 +146,8 @@ void motion(int x, int y)
 
 void passivemotion(int x, int y)
 {
-  /*
-	x = x/2 - settings.width/4;
-	y = (settings.height-y-1)/2 - settings.height/4;
-  */
-
-	mx = x / settings.zoom;
-  my = (settings.height - y - 1) / settings.zoom;
+	mx = transform_x(x);;
+  my = transform_y(y);;
 }
 
 void mouse(int button, int state, int x, int y)
@@ -158,17 +157,16 @@ void mouse(int button, int state, int x, int y)
 	alt_down = (glutGetModifiers() & GLUT_ACTIVE_ALT) != 0;
 	shift_down = (glutGetModifiers() & GLUT_ACTIVE_SHIFT) != 0;
 
-    if(button == GLUT_LEFT_BUTTON) {
-      mcx = x / settings.zoom;
-      mcy = (settings.height - y - 1) / settings.zoom;
-      printf("x: %d - y: %d\n", mcx, mcy);
-    }
+  if(button == GLUT_LEFT_BUTTON) {
+    mcx = transform_x(x);
+    mcy = transform_y(y);
+    printf("x: %d - y: %d\n", mcx, mcy);
+  }
 
-    if (selected != -1)
-	{
-		if (button==GLUT_LEFT_BUTTON && state==GLUT_UP)
-			selected = -1;
-		glutPostRedisplay();
+  if (selected != -1) {
+	if (button==GLUT_LEFT_BUTTON && state==GLUT_UP)
+		selected = -1;
+  	glutPostRedisplay();
 		return;
 	}
 
@@ -185,34 +183,37 @@ void mouse(int button, int state, int x, int y)
 	//      Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
 	//      cursor (x,y).
 
-    glSelectBuffer (BUFSIZE, selectBuf);
-    glRenderMode(GL_SELECT);
+  glSelectBuffer (BUFSIZE, selectBuf);
+  glRenderMode(GL_SELECT);
 
-    glInitNames();
-    glPushName(0);
+  glInitNames();
+  glPushName(0);
 
-    glMatrixMode (GL_PROJECTION);
-    glPushMatrix ();
-    glLoadIdentity ();
+  glMatrixMode (GL_PROJECTION);
+  glPushMatrix ();
+  glLoadIdentity ();
 
-    gluPickMatrix((GLdouble) x,
-                  (GLdouble) (viewport[3] - y),
-                  16.0,
-                  16.0, viewport);
-    printf("Px: %f - Py: %f\n", (GLdouble) mcx, (GLdouble) mcy);
-    gluOrtho2D (0, settings.width / settings.zoom,
-                0, settings.height / settings.zoom);
-    draw_components(GL_SELECT);
+  gluPickMatrix((GLdouble) x,
+                (GLdouble) (viewport[3] - y),
+                16.0,
+                16.0, viewport);
 
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glFlush();
+  gluOrtho2D(-(settings.width / settings.zoom) / 2 + settings.x_displ,
+              (settings.width / settings.zoom) / 2 + settings.x_displ,
+             -(settings.height / settings.zoom) / 2 + settings.y_displ,
+              (settings.height / settings.zoom) / 2 + settings.y_displ);
 
-    hits = glRenderMode(GL_RENDER);
-    selected = get_id(hits, selectBuf);
+  draw_components(GL_SELECT);
 
-    // Deletes the selected component if [ALT] is held down
-    if (alt_down) { components.erase(components.begin() + selected); selected = -1; }
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glFlush();
+
+  hits = glRenderMode(GL_RENDER);
+  selected = get_id(hits, selectBuf);
+
+  // Deletes the selected component if [ALT] is held down
+  if (alt_down) { components.erase(components.begin() + selected); selected = -1; }
 
 	glutPostRedisplay();
 } 
@@ -230,10 +231,10 @@ void update_ortho() {
   glViewport(0, 0, settings.width, settings.height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-  gluOrtho2D(0,
-             settings.width / settings.zoom  + settings.x_displ,
-             0,
-             settings.height / settings.zoom + settings.y_displ);
+  gluOrtho2D(-(settings.width / settings.zoom) / 2 + settings.x_displ,
+              (settings.width / settings.zoom) / 2 + settings.x_displ,
+             -(settings.height / settings.zoom) / 2 + settings.y_displ,
+              (settings.height / settings.zoom) / 2 + settings.y_displ);
 	glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 

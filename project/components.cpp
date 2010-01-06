@@ -22,10 +22,10 @@ component_t comp_parse_line(char *line) {
       c.rx = atoi(tok);
 
       tok = strtok(NULL, " ");
-      c.sx = atof(tok);
+      c.sx = (float)atof(tok);
 
       tok = strtok(NULL, " ");
-      c.sy = atof(tok);
+      c.sy = (float)atof(tok);
   }
 
   return c;
@@ -38,10 +38,10 @@ void comp_parse_file(char *filename, std::vector<component_t> *components) {
 
   components->clear();
 
-  fgets(line, sizeof(line), file);
-
-  while(fgets (line, sizeof(line), file) != NULL) {
-    components->push_back(comp_parse_line(line));
+  if (fgets(line, sizeof(line), file) != NULL) {
+    while(fgets (line, sizeof(line), file) != NULL) {
+      components->push_back(comp_parse_line(line));
+    }
   }
   
   fclose (file);

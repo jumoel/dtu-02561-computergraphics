@@ -87,7 +87,7 @@ void draw_wire(component_t comp, int i)
 {
   int radius = 1;
 
-  glPushName(MAGIC_NUMBER + i);
+  glPushName(NUM_ELEMS + i);
 
   glBegin(GL_LINE_STRIP);
   for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
@@ -98,7 +98,7 @@ void draw_wire(component_t comp, int i)
 
   glPopName();
 
-  glPushName(2 * MAGIC_NUMBER + i);
+  glPushName(2 * NUM_ELEMS + i);
 
   glBegin(GL_LINE_STRIP);
   for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {

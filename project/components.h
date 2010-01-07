@@ -6,7 +6,7 @@
 
 /* Maximum number of elements in the diagram
  * Should be 10^n, where n is what you want. */
-#define MAGIC_NUMBER 1000
+#define NUM_ELEMS 1000
 
 enum component_type
 {

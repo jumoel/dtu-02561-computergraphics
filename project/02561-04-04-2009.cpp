@@ -57,7 +57,7 @@ void draw_components(GLenum mode)
     const component_t &c = components[i];
 
     //draw selected component in different color
-    if (selected % MAGIC_NUMBER == i)
+    if (selected % NUM_ELEMS == i)
       glColor3f(1,0,0);
     else
       glColor3f(0,0,0);
@@ -94,21 +94,16 @@ int get_id(int hits, GLuint buffer[])
   if (hits == 0)
     return -1;
 
-  //TODO: grab name from the select buffer and return it
+  // grab name from the select buffer and return it
   GLuint *ptr = (GLuint *) buffer;
   GLint names;
 
   for (int i = 0; i < hits; i++)
   {
     names = *ptr;
-    printf("Names: %d\n", names);
     ptr = ptr + 3;
 
-    for (int j = 0; j < names; j++)
-    {
-      printf("Found: %d\n", ptr[j]);
-    }
-
+    // The element with lowest ID in the hitlist
     return *(ptr++);
   }
 
@@ -120,12 +115,8 @@ void motion(int x, int y)
   x = transform_x(x);
   y = transform_y(y);
 
-  // This function is called when the mouse is moved.
-  // Handle translation, rotation and scaling of the
-  // selected component here.
-
   if (selected != -1) {
-    component_t &c = components[selected % MAGIC_NUMBER];
+    component_t &c = components[selected % NUM_ELEMS];
 
     // Scale
     if (ctrl_down) {
@@ -152,7 +143,7 @@ void motion(int x, int y)
 
     // Move stuff
     else {
-      if (selected / MAGIC_NUMBER == 0) { // If an end *isn't* selected
+      if (selected / NUM_ELEMS == 0) { // If an end *isn't* selected
         if (tx_old == 0)
           tx_old = c.tx;
         if (ty_old == 0)
@@ -161,7 +152,7 @@ void motion(int x, int y)
         c.tx = tx_old + (x - mcx);
         c.ty = ty_old + (y - mcy);
       } else { // If an end *is* selected
-        int end = selected / MAGIC_NUMBER;
+        int end = selected / NUM_ELEMS;
         if (end == 1) {
           c.x1 = x - c.tx + settings.x_displ;
           c.y1 = y - c.ty + settings.y_displ;
@@ -199,7 +190,7 @@ void mouse(int button, int state, int x, int y)
 
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
     if (selected != -1) {
-      component_t &c = components[selected % MAGIC_NUMBER];
+      component_t &c = components[selected % NUM_ELEMS];
       rotate_old = c.rx;
       tx_old = c.tx;
       ty_old = c.ty;
@@ -227,9 +218,6 @@ void mouse(int button, int state, int x, int y)
   glGetIntegerv(GL_VIEWPORT, viewport);
 
   // Draw components with the 'select' render mode.
-  // Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
-  // cursor (x,y).
-
   glSelectBuffer (BUFSIZE, selectBuf);
   glRenderMode(GL_SELECT);
 
@@ -257,8 +245,8 @@ void mouse(int button, int state, int x, int y)
   selected = get_id(hits, selectBuf);
 
   // Deletes the selected component if [ALT] is held down
-  if (alt_down && (selected % MAGIC_NUMBER) != -1) {
-    components.erase(components.begin() + selected % MAGIC_NUMBER); selected = -1;
+  if (alt_down && (selected % NUM_ELEMS) != -1) {
+    components.erase(components.begin() + selected % NUM_ELEMS); selected = -1;
   }
 
   glutPostRedisplay();

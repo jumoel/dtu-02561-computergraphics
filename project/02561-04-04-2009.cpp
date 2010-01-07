@@ -38,6 +38,8 @@ static int mcx = 0; //mouse click position x
 static int mcy = 0; //mouse click position y
 
 static int rotate_old = 0;
+static int tx_old = 0;
+static int ty_old = 0;
 
 static program_settings_t settings;
 
@@ -155,12 +157,19 @@ void motion(int x, int y)
         // Move stuff
         else {
          if (selected / MAGIC_NUMBER == 0 && c.type != wire) {
+           if (tx_old == 0)
+             tx_old = c.tx;
+           if (ty_old == 0)
+             ty_old = c.ty;
 
-            c.tx = x + settings.x_displ;
-            c.ty = y + settings.y_displ;
-         } else if (selected / MAGIC_NUMBER == 0 && c.type == wire) {
-            c.tx = x;
-            c.ty = y;
+           c.tx = tx_old + (x - mcx);
+           c.ty = ty_old + (y - mcy);
+       } else if (selected / MAGIC_NUMBER == 0 && c.type == wire) {
+           /*
+           // TODO: BROKEN
+           c.tx = x + settings.x_displ;
+           c.ty = y + settings.y_displ;
+           */
          } else {
            int end = selected / MAGIC_NUMBER;
            if (end == 1) {
@@ -175,7 +184,7 @@ void motion(int x, int y)
     }
 
 	//save mouse position for later
-	mcx = x; mcy = y;
+	mx = x; my = y;
 
 	glutPostRedisplay();
 }
@@ -200,9 +209,14 @@ void mouse(int button, int state, int x, int y)
 
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
     if (selected != -1) {
-      rotate_old = components[selected % MAGIC_NUMBER].rx;
+      component_t &c = components[selected % MAGIC_NUMBER];
+      rotate_old = c.rx;
+      tx_old = c.tx;
+      ty_old = c.ty;
     } else {
       rotate_old = 0;
+      tx_old = 0;
+      ty_old = 0;
     }
   }
 
@@ -222,9 +236,9 @@ void mouse(int button, int state, int x, int y)
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
-	//TODO: Draw components with the 'select' render mode.
-	//      Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
-	//      cursor (x,y).
+	// Draw components with the 'select' render mode.
+	// Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
+	// cursor (x,y).
 
   glSelectBuffer (BUFSIZE, selectBuf);
   glRenderMode(GL_SELECT);
@@ -255,7 +269,9 @@ void mouse(int button, int state, int x, int y)
   selected = get_id(hits, selectBuf);
 
   // Deletes the selected component if [ALT] is held down
-  if (alt_down) { components.erase(components.begin() + selected % MAGIC_NUMBER); selected = -1; }
+  if (alt_down && (selected % MAGIC_NUMBER) != -1) {
+    components.erase(components.begin() + selected % MAGIC_NUMBER); selected = -1;
+  }
 
 	glutPostRedisplay();
 } 
@@ -347,8 +363,6 @@ void special_keyboard(int key, int x, int y)
       settings.x_displ -= 1;
       update_ortho();
       break;
-
-    
   }
 
 	glutPostRedisplay();
@@ -356,7 +370,7 @@ void special_keyboard(int key, int x, int y)
 
 void add_component(int c)
 {
-	components.push_back(component_t(c,mx,my));
+  components.push_back(component_t(c,mx + settings.x_displ, my + settings.y_displ));
 	glutPostRedisplay();
 }
 

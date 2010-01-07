@@ -4,6 +4,10 @@
 #include <vector>
 #include <stdio.h>
 
+/* Maximum number of elements in the diagram
+ * Should be 10^n, where n is what you want. */
+#define MAGIC_NUMBER 1000
+
 enum component_type
 {
 	capacitor,

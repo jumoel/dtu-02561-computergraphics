@@ -54,7 +54,7 @@ void draw_components(GLenum mode)
   //loop over components and draw them. Mode is either GL_RENDER or GL_SELECT
   for (size_t i=0; i<components.size(); ++i)
   {
-    const component_t& c = components[i];
+    const component_t &c = components[i];
 
     //draw selected component in different color
     if (selected % MAGIC_NUMBER == i)
@@ -67,7 +67,7 @@ void draw_components(GLenum mode)
     glTranslatef(c.tx, c.ty, 0.0);
     if (c.type != wire) {
       glRotatef(c.rx, 0.0, 0.0, 1.0);
-      glScalef(c.sx, c.sy, 1.0);
+      glScalef(c.sx, c.sx, 1.0);
     }
 
     switch (c.type) {
@@ -239,10 +239,8 @@ void mouse(int button, int state, int x, int y)
   glPushMatrix ();
   glLoadIdentity ();
 
-  gluPickMatrix((GLdouble) x,
-    (GLdouble) (viewport[3] - y),
-    16.0,
-    16.0, viewport);
+  double picksize = 4.0;
+  gluPickMatrix((GLdouble) x, (GLdouble) (viewport[3] - y), picksize, picksize, viewport);
 
   gluOrtho2D(-(settings.width / settings.zoom) / 2 + settings.x_displ,
     (settings.width / settings.zoom) / 2 + settings.x_displ,

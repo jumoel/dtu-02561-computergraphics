@@ -14,10 +14,6 @@
 //size of selection buffer
 #define BUFSIZE 512
 
-#define MAGIC_NUMBER 1000
-
-
-
 //list with current components
 static std::vector<component_t> components;
 
@@ -55,16 +51,16 @@ int transform_y(int y) {
 
 void draw_components(GLenum mode)
 {
-	//loop over components and draw them. Mode is either GL_RENDER or GL_SELECT
-	for (size_t i=0; i<components.size(); ++i)
-	{
-		const component_t& c = components[i];
+  //loop over components and draw them. Mode is either GL_RENDER or GL_SELECT
+  for (size_t i=0; i<components.size(); ++i)
+  {
+    const component_t& c = components[i];
 
-		//draw selected component in different color
-		if (selected % MAGIC_NUMBER == i)
-			glColor3f(1,0,0);
-		else
-			glColor3f(0,0,0);
+    //draw selected component in different color
+    if (selected % MAGIC_NUMBER == i)
+      glColor3f(1,0,0);
+    else
+      glColor3f(0,0,0);
 
     glPushMatrix();
 
@@ -74,49 +70,49 @@ void draw_components(GLenum mode)
       glScalef(c.sx, c.sy, 1.0);
     }
 
-		switch (c.type) {
-			case capacitor:
-				draw_capacitor(c, i);
-				break;
-			case resistor:
-				draw_resistor(c, i);
-				break;
-			case transistor:
-				draw_transistor(c, i);
-				break;
+    switch (c.type) {
+      case capacitor:
+        draw_capacitor(c, i);
+        break;
+      case resistor:
+        draw_resistor(c, i);
+        break;
+      case transistor:
+        draw_transistor(c, i);
+        break;
       case wire:
         draw_wire(c, i);
         break;
-		}
+    }
 
     glPopMatrix();
-	}
+  }
 }
 
 int get_id(int hits, GLuint buffer[])
 {
-	if (hits == 0)
-		return -1;
+  if (hits == 0)
+    return -1;
 
-	//TODO: grab name from the select buffer and return it
-    GLuint *ptr = (GLuint *) buffer;
-    GLint names;
+  //TODO: grab name from the select buffer and return it
+  GLuint *ptr = (GLuint *) buffer;
+  GLint names;
 
-    for (int i = 0; i < hits; i++)
+  for (int i = 0; i < hits; i++)
+  {
+    names = *ptr;
+    printf("Names: %d\n", names);
+    ptr = ptr + 3;
+
+    for (int j = 0; j < names; j++)
     {
-        names = *ptr;
-        printf("Names: %d\n", names);
-        ptr = ptr + 3;
- 
-        for (int j = 0; j < names; j++)
-        {
-          printf("Found: %d\n", ptr[j]);
-        }
-
-        return *(ptr++);
+      printf("Found: %d\n", ptr[j]);
     }
 
-	return -1;
+    return *(ptr++);
+  }
+
+  return -1;
 }
 
 void motion(int x, int y)
@@ -124,83 +120,77 @@ void motion(int x, int y)
   x = transform_x(x);
   y = transform_y(y);
 
-	// This function is called when the mouse is moved.
-	// Handle translation, rotation and scaling of the
-	// selected component here.
+  // This function is called when the mouse is moved.
+  // Handle translation, rotation and scaling of the
+  // selected component here.
 
-    if (selected != -1) {
-      component_t &c = components[selected % MAGIC_NUMBER];
+  if (selected != -1) {
+    component_t &c = components[selected % MAGIC_NUMBER];
 
-        // Scale
-        if (ctrl_down) {
+    // Scale
+    if (ctrl_down) {
 
-          // Prevent objects disappearing
-          int deltax = mcx - mx;
-          int deltay = mcy - mx;
-          if (deltax == 0) deltax = 1;
-          if (deltay == 0) deltay = 1;
+      // Prevent objects disappearing
+      int deltax = mcx - mx;
+      int deltay = mcy - mx;
+      if (deltax == 0) deltax = 1;
+      if (deltay == 0) deltay = 1;
 
-          c.sx = ((deltax / 5.0));
-          c.sy = ((deltay / 5.0));
-        }
-
-        // Rotation
-        else if (shift_down) {
-            int dx = mcx - mx;
-
-            if (rotate_old == 0)
-              rotate_old = c.rx;
-
-            c.rx = rotate_old + dx * 4;
-        }
-
-        // Move stuff
-        else {
-         if (selected / MAGIC_NUMBER == 0 && c.type != wire) {
-           if (tx_old == 0)
-             tx_old = c.tx;
-           if (ty_old == 0)
-             ty_old = c.ty;
-
-           c.tx = tx_old + (x - mcx);
-           c.ty = ty_old + (y - mcy);
-       } else if (selected / MAGIC_NUMBER == 0 && c.type == wire) {
-           /*
-           // TODO: BROKEN
-           c.tx = x + settings.x_displ;
-           c.ty = y + settings.y_displ;
-           */
-         } else {
-           int end = selected / MAGIC_NUMBER;
-           if (end == 1) {
-             c.x1 = x - c.tx + settings.x_displ;
-             c.y1 = y - c.ty + settings.y_displ;
-           } else {
-             c.x2 = x - c.tx + settings.x_displ;
-             c.y2 = y - c.ty + settings.y_displ;
-           }
-         }
-        }
+      c.sx = ((deltax / 5.0));
+      c.sy = ((deltay / 5.0));
     }
 
-	//save mouse position for later
-	mx = x; my = y;
+    // Rotation
+    else if (shift_down) {
+      int dx = mcx - mx;
 
-	glutPostRedisplay();
+      if (rotate_old == 0)
+        rotate_old = c.rx;
+
+      c.rx = rotate_old + dx * 4;
+    }
+
+    // Move stuff
+    else {
+      if (selected / MAGIC_NUMBER == 0) { // If an end *isn't* selected
+        if (tx_old == 0)
+          tx_old = c.tx;
+        if (ty_old == 0)
+          ty_old = c.ty;
+
+        c.tx = tx_old + (x - mcx);
+        c.ty = ty_old + (y - mcy);
+      } else { // If an end *is* selected
+        int end = selected / MAGIC_NUMBER;
+        if (end == 1) {
+          c.x1 = x - c.tx + settings.x_displ;
+          c.y1 = y - c.ty + settings.y_displ;
+        } else {
+          c.x2 = x - c.tx + settings.x_displ;
+          c.y2 = y - c.ty + settings.y_displ;
+        }
+      }
+    }
+  }
+
+  //save mouse position for later
+  mx = x; my = y;
+
+  glutPostRedisplay();
 }
 
 void passivemotion(int x, int y)
 {
-	mx = transform_x(x);
+  mx = transform_x(x);
   my = transform_y(y);
 }
 
 void mouse(int button, int state, int x, int y)
 {
 
-	ctrl_down = (glutGetModifiers() & GLUT_ACTIVE_CTRL) != 0;
-	alt_down = (glutGetModifiers() & GLUT_ACTIVE_ALT) != 0;
-	shift_down = (glutGetModifiers() & GLUT_ACTIVE_SHIFT) != 0;
+  ctrl_down = (glutGetModifiers() & GLUT_ACTIVE_CTRL) != 0;
+  alt_down = (glutGetModifiers() & GLUT_ACTIVE_ALT) != 0;
+  shift_down = (glutGetModifiers() & GLUT_ACTIVE_SHIFT) != 0;
 
   if(button == GLUT_LEFT_BUTTON) {
     mcx = transform_x(x);
@@ -221,24 +211,24 @@ void mouse(int button, int state, int x, int y)
   }
 
   if (selected != -1) {
-	if (button==GLUT_LEFT_BUTTON && state==GLUT_UP)
-		selected = -1;
-  	glutPostRedisplay();
-		return;
-	}
+    if (button==GLUT_LEFT_BUTTON && state==GLUT_UP)
+      selected = -1;
+    glutPostRedisplay();
+    return;
+  }
 
-	if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN)
-		return;
+  if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN)
+    return;
 
-	GLint viewport[4];
-    GLuint selectBuf[BUFSIZE];
-    GLint hits;
+  GLint viewport[4];
+  GLuint selectBuf[BUFSIZE];
+  GLint hits;
 
-	glGetIntegerv(GL_VIEWPORT, viewport);
+  glGetIntegerv(GL_VIEWPORT, viewport);
 
-	// Draw components with the 'select' render mode.
-	// Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
-	// cursor (x,y).
+  // Draw components with the 'select' render mode.
+  // Use gluPickMatrix to restrict drawing to a 16x16 pixels area near
+  // cursor (x,y).
 
   glSelectBuffer (BUFSIZE, selectBuf);
   glRenderMode(GL_SELECT);
@@ -250,14 +240,14 @@ void mouse(int button, int state, int x, int y)
   glLoadIdentity ();
 
   gluPickMatrix((GLdouble) x,
-                (GLdouble) (viewport[3] - y),
-                16.0,
-                16.0, viewport);
+    (GLdouble) (viewport[3] - y),
+    16.0,
+    16.0, viewport);
 
   gluOrtho2D(-(settings.width / settings.zoom) / 2 + settings.x_displ,
-              (settings.width / settings.zoom) / 2 + settings.x_displ,
-             -(settings.height / settings.zoom) / 2 + settings.y_displ,
-              (settings.height / settings.zoom) / 2 + settings.y_displ);
+    (settings.width / settings.zoom) / 2 + settings.x_displ,
+    -(settings.height / settings.zoom) / 2 + settings.y_displ,
+    (settings.height / settings.zoom) / 2 + settings.y_displ);
 
   draw_components(GL_SELECT);
 
@@ -273,49 +263,49 @@ void mouse(int button, int state, int x, int y)
     components.erase(components.begin() + selected % MAGIC_NUMBER); selected = -1;
   }
 
-	glutPostRedisplay();
+  glutPostRedisplay();
 } 
 
 void display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	draw_components(GL_RENDER);   
-	glutSwapBuffers();
+  glClear(GL_COLOR_BUFFER_BIT);
+  draw_components(GL_RENDER);   
+  glutSwapBuffers();
 }
 
 void update_ortho() {
   glutReshapeWindow(settings.width, settings.height);
 
   glViewport(0, 0, settings.width, settings.height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
   gluOrtho2D(-(settings.width / settings.zoom)  / 2 + settings.x_displ,
-              (settings.width / settings.zoom)  / 2 + settings.x_displ,
-             -(settings.height / settings.zoom) / 2 + settings.y_displ,
-              (settings.height / settings.zoom) / 2 + settings.y_displ);
-	glMatrixMode(GL_MODELVIEW);
+    (settings.width / settings.zoom)  / 2 + settings.x_displ,
+    -(settings.height / settings.zoom) / 2 + settings.y_displ,
+    (settings.height / settings.zoom) / 2 + settings.y_displ);
+  glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  
+
 }
 
 void reshape(int w, int h)
 {
-	glClearColor(1.f,1.f,1.f,0.f);
-	glColor3f(0.f, 0.f, 0.f);
-	glLineWidth(2.f);
+  glClearColor(1.f,1.f,1.f,0.f);
+  glColor3f(0.f, 0.f, 0.f);
+  glLineWidth(2.f);
 
-	settings.width = w; settings.height = h;
+  settings.width = w; settings.height = h;
 
-	update_ortho();
+  update_ortho();
 }
 
 void keyboard(unsigned char key, int x, int y)
 {
   switch (key) {
     case 19: // CTRL-S or CTRL-s
-        save_file(manualsave, &components, &settings);
-        printf("File saved as %s\n", manualsave);
+      save_file(manualsave, &components, &settings);
+      printf("File saved as %s\n", manualsave);
       break;
 
     case '+':
@@ -327,15 +317,15 @@ void keyboard(unsigned char key, int x, int y)
       update_ortho();
 
       break;
-   
+
     case 27:
     case 'q':
     case 'Q':
-	    exit(0);
-	    break;
+      exit(0);
+      break;
   }
 
-	glutPostRedisplay();
+  glutPostRedisplay();
 }
 
 void special_keyboard(int key, int x, int y)
@@ -365,13 +355,13 @@ void special_keyboard(int key, int x, int y)
       break;
   }
 
-	glutPostRedisplay();
+  glutPostRedisplay();
 }
 
 void add_component(int c)
 {
   components.push_back(component_t(c,mx + settings.x_displ, my + settings.y_displ));
-	glutPostRedisplay();
+  glutPostRedisplay();
 }
 
 void main_menu(int c) {
@@ -394,9 +384,9 @@ void main_menu(int c) {
 
 void create_menus() {
   int compmenu = glutCreateMenu(add_component);
-	glutAddMenuEntry("Capacitor", capacitor); 
+  glutAddMenuEntry("Capacitor", capacitor); 
   glutAddMenuEntry("Resistor", resistor); 
-	glutAddMenuEntry("Transistor", transistor);
+  glutAddMenuEntry("Transistor", transistor);
   glutAddMenuEntry("Wire", wire);
 
   int menu = glutCreateMenu(main_menu);
@@ -418,23 +408,23 @@ int main(int argc, char** argv)
 
   atexit(autosave_file);
 
-	//setup glut
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+  //setup glut
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowSize(settings.width, settings.height);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow(argv[0]);
-	
+  glutInitWindowPosition(100, 100);
+  glutCreateWindow(argv[0]);
+
   create_menus();
 
-	glutReshapeFunc(reshape);
-	glutDisplayFunc(display); 
-	glutMouseFunc(mouse);
-	glutMotionFunc(motion);
+  glutReshapeFunc(reshape);
+  glutDisplayFunc(display); 
+  glutMouseFunc(mouse);
+  glutMotionFunc(motion);
   glutPassiveMotionFunc(passivemotion);
-	glutKeyboardFunc(keyboard);
+  glutKeyboardFunc(keyboard);
   glutSpecialFunc(special_keyboard);
-	glutMainLoop();
+  glutMainLoop();
 
-	return 0; 
+  return 0; 
 }

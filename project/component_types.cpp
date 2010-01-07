@@ -8,78 +8,78 @@
 void draw_capacitor(component_t comp, int i)
 {
   glPushName(i);
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-13.0, 0.0);
-        glVertex2f(-1.0, 0.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(-13.0, 0.0);
+  glVertex2f(-1.0, 0.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-1.0, 5.0);
-        glVertex2f(-1.0, -5.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(-1.0, 5.0);
+  glVertex2f(-1.0, -5.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(1.0, 5.0);
-        glVertex2f(1.0, -5.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(1.0, 5.0);
+  glVertex2f(1.0, -5.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(13.0, 0.0);
-        glVertex2f(1.0, 0.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(13.0, 0.0);
+  glVertex2f(1.0, 0.0);
+  glEnd();
   glPopName();
 }
 
 void draw_resistor(component_t comp, int i)
 {
   glPushName(i);
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-13.0, 0.0);
-        glVertex2f(-10.0, 0.0);
-        glVertex2f(-8.0, 4.0);
-        glVertex2f(-4.0, -4.0);
-        glVertex2f(0.0, 4.0);
-        glVertex2f(4.0, -4.0);
-        glVertex2f(8.0, 4.0);
-        glVertex2f(10.0, 0.0);
-        glVertex2f(13.0, 0.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(-13.0, 0.0);
+  glVertex2f(-10.0, 0.0);
+  glVertex2f(-8.0, 4.0);
+  glVertex2f(-4.0, -4.0);
+  glVertex2f(0.0, 4.0);
+  glVertex2f(4.0, -4.0);
+  glVertex2f(8.0, 4.0);
+  glVertex2f(10.0, 0.0);
+  glVertex2f(13.0, 0.0);
+  glEnd();
   glPopName();
 }
 
 void draw_transistor(component_t comp, int i)
 {
   glPushName(i);
-    int radius = 8;
+  int radius = 8;
 
-    glBegin(GL_LINE_STRIP);
-        for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
-            glVertex2f(radius * cos(angle),
-                       radius * sin(angle));
-        }
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
+    glVertex2f(radius * cos(angle),
+      radius * sin(angle));
+  }
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-10.0, 0.0);
-        glVertex2f(-2.0, 0.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(-10.0, 0.0);
+  glVertex2f(-2.0, 0.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(-2.0, 5.0);
-        glVertex2f(-2.0, -5.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(-2.0, 5.0);
+  glVertex2f(-2.0, -5.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(4.0, 12.0);
-        glVertex2f(4.0, 5.0);
-        glVertex2f(-2.0, 2.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(4.0, 12.0);
+  glVertex2f(4.0, 5.0);
+  glVertex2f(-2.0, 2.0);
+  glEnd();
 
-    glBegin(GL_LINE_STRIP);
-        glVertex2f(4.0, -12.0);
-        glVertex2f(4.0, -5.0);
-        glVertex2f(-2.0, -2.0);
-    glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex2f(4.0, -12.0);
+  glVertex2f(4.0, -5.0);
+  glVertex2f(-2.0, -2.0);
+  glEnd();
   glPopName();
 }
 
@@ -87,24 +87,24 @@ void draw_wire(component_t comp, int i)
 {
   int radius = 1;
 
-  glPushName(1000 + i);
+  glPushName(MAGIC_NUMBER + i);
 
   glBegin(GL_LINE_STRIP);
-    for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
-      glVertex2f(radius * cos(angle) + comp.x1,
-                 radius * sin(angle) + comp.y1);
-    }
+  for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
+    glVertex2f(radius * cos(angle) + comp.x1,
+      radius * sin(angle) + comp.y1);
+  }
   glEnd();
 
   glPopName();
 
-  glPushName(2000 + i);
+  glPushName(2 * MAGIC_NUMBER + i);
 
   glBegin(GL_LINE_STRIP);
-    for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
-      glVertex2f(radius * cos(angle) + comp.x2,
-                 radius * sin(angle) + comp.y2);
-    }
+  for(float angle = 0; angle <= 360.0; angle = angle + 0.1) {
+    glVertex2f(radius * cos(angle) + comp.x2,
+      radius * sin(angle) + comp.y2);
+  }
   glEnd();
 
   glPopName();
@@ -112,8 +112,8 @@ void draw_wire(component_t comp, int i)
   glPushName(i);
 
   glBegin(GL_LINE_STRIP);
-    glVertex2f(comp.x1, comp.y1);
-    glVertex2f(comp.x2, comp.y2);
+  glVertex2f(comp.x1, comp.y1);
+  glVertex2f(comp.x2, comp.y2);
   glEnd();
 
   glPopName();

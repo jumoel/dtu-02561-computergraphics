@@ -1,27 +1,37 @@
-varying vec3 rv;
-varying vec3 rf;
-varying float r;
+varying vec3 normal;
+varying mat3 normalmat;
+varying vec3 position;
 
 uniform vec3 camera;
+
+varying float theta;
+varying float phi;
+
+varying vec3 T;
+varying vec3 B;
+varying vec3 X;
+
+uniform sampler2D normalMap;
 
 void main()
 {
     gl_Position = ftransform();
     
-    vec3 position = vec3(gl_Vertex);
-    vec3 normal   = gl_Normal;
+    position = vec3(gl_Vertex);
+    normal   = gl_Normal;
+    normalmat = gl_NormalMatrix;
     
-    vec3 n = normalize(normal);
-	vec3 i = -normalize(camera-position);
+    float PI = 3.14159265358979323846264;
+    
+    // This works because the sphere is centered around the origin and the radius is 1
+    theta = acos(gl_Vertex.z);  // [0, pi]
+	phi = atan(gl_Vertex.y, gl_Vertex.x); // [-pi, pi]
+
+	X = (vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)));
+	T = (vec3(cos(theta) * cos(phi), cos(theta) * sin(phi), -sin(theta)));
+	B = (vec3(-sin(theta) * sin(phi), sin(theta) * cos(phi), 0));
 	
-	rv = reflect(i, n);
-	rf = refract(i, n, 1.0 / 2.04);
-	
-	r = max(0, pow(dot(i, n), 3));
-	/*
-	Water: 1.33
-	Glass: 2.04
-	
-	http://www.robinwood.com/Catalog/Technical/Gen3DTuts/Gen3DPages/RefractionIndexList.html
-	*/
+	// Normalmap is [0,1]
+	theta = (theta / PI);
+	phi = (phi + PI) / (2.0 * PI);
 }

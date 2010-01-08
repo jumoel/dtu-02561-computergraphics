@@ -1,7 +1,166 @@
 \chapter{Projekt: Udvidelse af diagramprogrammet}
 \label{cha:proj-udvid-af}
 
+Til vores projekt valgte vi at udvide diagramtegningsprogrammet fra
+ugeopgave 4, del 4.
 
+\section{Funktionalitet i originalprogram}
+\label{sec:funkt-i-orig}
+
+Vores originalprogram kunne følgende:
+
+\begin{itemize}
+\item Indsætte de tre komponenter: Transistorer, resistorer og
+  kapacitorer.
+\item Rotere komponenter
+\item Skalere komponenter
+\item Flytte komponenter
+\item Slette komponenter
+\end{itemize}
+
+\section{Ændringer i funktionaliteter}
+\label{sec:andr-i-funkt}
+
+Følgende funktionalitet er ændret:
+
+\begin{itemize}
+\item Rotering
+\item Skalering
+\item Udvælgelse af objekter
+\end{itemize}
+
+\subsection{Rotering}
+\label{sec:rotering}
+
+Rotationen af komponenter er blevet ændret. I opgave 4-programmet blev
+objekter roteret ift. det oprindelige museklikspunkt. Dvs. at havde
+man først flyttet musen til højre, blev objektet ved med at rotere
+samme vej, når man flyttede musen tilbage mod nulpunktet blot mindre
+og mindre. Dette skete indtil musen var på den ``anden side'' af
+nulpunktet, hvorefter rotationen ville være den anden vej. Det vil
+sige at flyttede man musen fra nulpunktet til en side og derefter
+tilbage til nulpunktet, vil obektets rotation ikke være
+nulstillet. Havde objektet fx roteret en kvart omgang på vej ud ville
+det rotere en kvart omgang mere på vej tilbage til nulpunktet.
+
+Dette er lavet om til en mere intuitiv opførsel, hvor bevægelse lige
+langt frem og tilbage resulterer i en rotation, der fører objektet
+tilbage til udgangspunktet. Føres musen til højre roteres med uret og
+flyttes musen til venstre roteres mod uret.
+
+\subsection{Skalering}
+\label{sec:skalering}
+
+I programmet fra ugeopgave 4 kunne man ved behændig håndtering af sin
+mus få objekter til at forsvinde, ved at få skaleringsfaktoren til at
+blive $0$. Dette har vi umuliggjort. Desuden har vi fjernet uafhængig
+skalering af de to akser, da vi fandt det svært at styre og ikke
+brugbart i et realistisk miljø. Dermed bevarer komponenterne deres
+størrelsesforhold når de skaleres.
+
+\subsection{Udvælgelse af objekter}
+\label{sec:udvalg-af-objekt}
+
+For at gøre det lettere at ``fange'' objekter med musen når der fx er
+zoomet ud (se afsnit \ref{sec:zoom}) eller er mange objekter i
+nærheden af hinanden, har vi minimeret det aktive område hvorfra der
+vælges objekter ved museklik.
+
+\section{Tilføjet funktionalitet}
+\label{sec:tilf-funkt}
+
+Vi har tilføjet følgende funktionalitet i vores program:
+
+\begin{itemize}
+\item Mulighed for at zoome ind og ud
+\item Mulighed for at panorere i diagrammet
+\item Mulighed for at gemme og læse filer
+\item Automatisk gemning og læsning af filer
+\item Gendannelse af vindues- og diagramegenskaber ved indlæsning af filer
+\item Tilføjet ny komponenttype: Ledninger
+\end{itemize}
+
+\subsection{Zoom}
+\label{sec:zoom}
+
+Zoom er tilføjet programmet. Man kan zoome ud og dermed gøre
+objekterne mindre ved tryk på \texttt{-} (minus). Modsat kan man zoome
+ind og gøre objekter større på \texttt{+} (plus).
+
+Zoomen foregår omkring det koordinat, der befinder sig i midten af det
+synlige vindue.
+
+\subsection{Panorering}
+\label{sec:panorering}
+
+På piletasterne kan man panorere i billedet. Det svarer reelt til, at
+man på pil-op flytter alle objekter nedad i vinduet. Det tilsvarende
+gør sig gældende ved tryk på de resterende piletaster.
+
+\subsection{Gemning og indlæsning af filer}
+\label{sec:gemning-af-filer}
+
+Ved tryk på \texttt{CTRL-S} bliver det aktive diagram gemt i en fil
+ved navn \texttt{circuit.ccd}\footnote{\texttt{ccd} står for
+  \textbf{C}ir\textbf{c}uit \textbf{D}iagram.}. Befinder der sig en
+\texttt{curcuit.ccd}-fil i programmets mappe kan denne hentes ind ved
+brug af højrekliksmenuen. Det aktive diagram i vinduet erstattes
+dermed af det gemte. Samtidig gendannes vinduets egenskaber zoom,
+panorering samt størrelse.
+
+\subsection{Automatisk gemning og indlæsning af filer}
+\label{sec:autom-gemn-af}
+
+Udover ovenstående funktionalitet gemmes det aktive diagram automatisk
+i en fil ved navn \texttt{autosave.ccd}, hvis programmet afsluttes
+vha. tryk på \texttt{Q}, \texttt{ALT-F4}, \texttt{ESC} eller fx
+krydset i hjørnet af vinduet.
+
+Hvis der er en \texttt{autosave.ccd}-fil til stede i programmets
+mappe, når programmet startes, indlæses denne automatisk og vinduets
+egenskaber sættes, som det var tilfældet ved indlæsning af manuelt
+gemte filer (se afsnit \ref{sec:gemning-af-filer}. Endvidere er det
+muligt, manuelt at indlæse den automatisk gemte fil ved hjælp af
+højrekliksmenuen.
+
+\subsection{Ny komponenttype: Ledninger}
+\label{sec:ny-komp-ledn}
+
+Som måske den vigtigste tilføjelse, har vi gjort det muligt at
+indsætte ledninger i diagrammerne. Dette gøres ved hjælp af
+højrekliksmenuen.
+
+Ledninger indsættes som et punkt, fordi de til at starte ikke har
+nogen længde. Det har vi gjort, fordi vi fandt det sandsynligt, at
+ledninger formentlig ville blive indsat enten ved et start- eller
+slutpunkt.
+
+Placering af ledningens endepunkter sker ved at trække i dem
+enkeltvist. Dermed kan man fx bevare det ene endepunkt, mens det andet
+ændres. Vil man flytte hele ledningen, gøres det ved at hive fat i et
+punkt, der ikke er placeret nær enderne. Fordi vi ikke synes, at det
+gav mening eller var nødvendigt at rotere eller skalere ledninger for
+at placere dem, er rotering og skalering af ledninger ikke
+muligt. Måden at placere ledningerne på vha. deres endepunkter er
+klart en nemmere måde at gøre det på.
+
+Pga. vores måde at genkende endepunkter på, er der en konstant,
+\texttt{NUM\_ELEMS}, i kildefilerne, der angiver, hvor mange objekter
+et diagram maksimalt kan indeholde. I de udleverede \texttt{exe}-filer
+er der en begrænsning på $1000$ objekter. Opførsel ved højere antal
+objekter end det i programmet angivne, er ikke defineret.
+
+En nyindsat ledning kan ses i øverste venstre hjørne på figur
+\ref{fig:p-1}. Til højre for kan en udtrukket ledning ses. Derudover
+viser figuren et eksempel på et diagram, hvori der er blevet zoomet
+ind, panoreret samt brugt alle de mulige komponenttyper.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../project/screenshots/project.png}
+\caption{Endeligt diagramtegningsprogram}
+\label{fig:p-1}
+\end{figure}
 
 %%% Local Variables: 
 %%% mode: latex

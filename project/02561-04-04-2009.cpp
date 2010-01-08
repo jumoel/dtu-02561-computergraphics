@@ -138,7 +138,7 @@ void motion(int x, int y)
       if (rotate_old == 0)
         rotate_old = c.rx;
 
-      c.rx = rotate_old + dx * 4;
+      c.rx = rotate_old + dx * 5;
     }
 
     // Move stuff

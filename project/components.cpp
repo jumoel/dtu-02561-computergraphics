@@ -50,6 +50,8 @@ component_t comp_parse_line(char *line) {
 void comp_parse_file(char *filename, std::vector<component_t> *components) {
   FILE *file = fopen(filename, "rb");
 
+  if (file == NULL) return;
+
   char line[100];
 
   components->clear();

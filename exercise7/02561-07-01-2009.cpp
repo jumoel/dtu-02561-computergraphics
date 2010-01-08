@@ -19,8 +19,8 @@ void display(void)
 /* set clear color to white and clear window */
 
 	//part 1 a & b
-	GLfloat light[3]={0.0, 10.0, 0.0};
-//	GLfloat light[3]={0.0, 14.0, 0.0};
+//	GLfloat light[3]={0.0, 10.0, 0.0};
+	GLfloat light[3]={0.0, 14.0, 0.0};
 
 	GLfloat m[16];
 
@@ -50,19 +50,19 @@ void display(void)
 	gluLookAt(1.0,1.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 /* define unit square polygon */
-
+/*
 	glBegin(GL_POLYGON);
 		glVertex3f( -2.5, 2.5, -2.5);		
 		glVertex3f(-2.5,2.5, 2.5);
 		glVertex3f( 2.5,2.5, 2.5);	
 		glVertex3f( 2.5,2.5, -2.5);
-/*
+*/
 		glBegin(GL_POLYGON);
 		glVertex3f( -2.5, 6.5, -2.5);		
 		glVertex3f(-2.5,6.5, 2.5);
 		glVertex3f( 2.5,6.5, 2.5);	
 		glVertex3f( 2.5,6.5, -2.5);
-*/
+
 		glEnd();
 
 	glPushMatrix();
@@ -71,17 +71,18 @@ void display(void)
 	glTranslatef(-light[0], -light[1],-light[2]);
 	glColor3f(0.0,0.0,0.0);
 	glBegin(GL_POLYGON);
-		glVertex3f( -2.5, 2.5, -2.5);		
+/*
+	glVertex3f( -2.5, 2.5, -2.5);		
 		glVertex3f(-2.5,2.5, 2.5);
 		glVertex3f( 2.5,2.5, 2.5);	
 		glVertex3f( 2.5,2.5, -2.5);
-/*
+*/
 	glBegin(GL_POLYGON);
 		glVertex3f( -2.5, 6.5, -2.5);		
 		glVertex3f(-2.5,6.5, 2.5);
 		glVertex3f( 2.5,6.5, 2.5);	
 		glVertex3f( 2.5,6.5, -2.5);
-*/
+
 		glEnd();
 	glPopMatrix();
 

@@ -189,6 +189,13 @@ void display(void)
 		glEnd();
 	glPopMatrix();
 
+	glLoadIdentity();
+	glColor3f(0.0,1.0,0.0);
+	glTranslatef(10.0,-5.0,0.0);
+	glRotatef(-128.0,0.0,1.0,0.0);
+	glRotatef(-30.0,1.0,0.0,0.0);
+	glutWireCone(1.0, 3.0, 10.0, 1.0);
+
 /* Swap buffers */
 
 	glutSwapBuffers();

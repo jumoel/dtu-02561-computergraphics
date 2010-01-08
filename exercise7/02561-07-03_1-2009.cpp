@@ -54,6 +54,7 @@ void display(void)
 	GLfloat light[3]={0.0, 10.0, 0.0};
 
 
+
 	//Set Y-coordinates to 0.0 or -4.0 if you want to change between Yw=0 and Yw=-4
 	GLfloat plane[4];
 	GLfloat v1[3] = {0.0, 0.0, 0.0};
@@ -135,6 +136,13 @@ void display(void)
 
 		glEnd();
 	glPopMatrix();
+
+	glLoadIdentity();
+	glColor3f(0.0,1.0,0.0);
+	glTranslatef(0.0,10.0,0.0);
+	glRotatef(90.0,0.1,0.0,0.0);
+	glutWireCone(1.0, 3.0, 10.0, 1.0);
+
 
 /* Swap buffers */
 

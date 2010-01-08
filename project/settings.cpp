@@ -6,6 +6,8 @@
 void settings_parse_file(char *filename, program_settings_t *settings) {
   FILE *file = fopen(filename, "rb");
 
+  if (file == NULL) return;
+
   char line[100];
 
   if (fgets (line, sizeof(line), file) != NULL) {

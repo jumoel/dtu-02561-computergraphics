@@ -47,7 +47,7 @@ void display(void)
    gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
    glPushMatrix ();
-   glRotated ((GLdouble) (spinLight/10), 1.0, 0.0, 0.0);
+   glRotated ((GLdouble) (spinLight), 1.0, 0.0, 0.0);
    glLightfv (GL_LIGHT0, GL_POSITION, position);
 
    glTranslated (0.0, 0.0, 1.5);
@@ -58,11 +58,11 @@ void display(void)
    glPopMatrix ();
 
    glPushMatrix ();
-   glRotated ((GLdouble) (spinObj/10), 0.0, 1.0, 0.0);
+   glRotated ((GLdouble) (spinObj), 0.0, 1.0, 0.0);
    glutSolidTorus (0.275, 0.85, 8, 15);
    glPopMatrix ();
    glPopMatrix ();
-   glFlush ();
+glutSwapBuffers();
 }
 
 void reshape (int w, int h)
@@ -87,17 +87,18 @@ void keyboard(unsigned char key, int x, int y)
    }
 }
 
-void idle (void)
+void idle (int)
 {
-	spinLight = (spinLight + 2)%3600;
-	spinObj = (spinObj + 1) % 3600;
+	spinLight = (spinLight + 2)%360;
+	spinObj = (spinObj + 1) % 360;
 	glutPostRedisplay();
+	glutTimerFunc(2, idle,NULL);
 }
 
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
    glutInitWindowSize (500, 500); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow (argv[0]);
@@ -105,7 +106,7 @@ int main(int argc, char** argv)
    glutDisplayFunc(display); 
    glutReshapeFunc(reshape);
    glutKeyboardFunc(keyboard);
-   glutIdleFunc(idle);
+	glutTimerFunc(2, idle,NULL);
    glutMainLoop();
    return 0;
 }

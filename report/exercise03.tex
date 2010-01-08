@@ -4,9 +4,40 @@
 
 \section{Part 1}
 
-\todo{mangler at forklare imba ligning}
+$L_{e}$ er \texttt{GL\_EMISSION} i \texttt{glMaterial*()}
+
+$L_{a}$ er \texttt{GL\_AMBIENT} i \texttt{glLight*()}
+
+$L_{d}$ er \texttt{GL\_DIFFUSE} i \texttt{glLight*()}
+
+$L_{s}$ er \texttt{GL\_SPECULAR} i \texttt{glLight*()}
+
+$K_{a}$ er \texttt{GL\_AMBIENT} i \texttt{glMaterial*()}
+
+$K_{d}$ er \texttt{GL\_DIFFUSE} i \texttt{glMaterial*()}
+
+$K_{s}$ er \texttt{GL\_SPECULAR} i \texttt{glMaterial*()}
+
+$l$ er \texttt{GL\_SPOT\_DIRECTION} i \texttt{glLight*()}
+
+$\alpha$ er \texttt{GL\_SHININESS} i \texttt{glMaterial*()}
+
+Ambient lys simulerer det lille mængde lys der bliver spredt over hele scenen.
+
+Fordelen ved 2 \textit{ambient terms} er at der er farve på objekter i scenen selvom der ikke er sat en lyskilde op, fordi der er et globalt ambient lys.
+
+
 
 \section{Part 2}
+
+Programmet kan ses i figur \ref{fig:3-2-1}.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/2.png}
+\caption{bolde}
+\label{fig:3-2-1}
+\end{figure}
 
 Setting the diffusal material to 0,0,0:
 Hvis man sætter diffusal material til 0,0,0 mister kuglen dens genskind på nær det der kommer fra det speculære materiale. Den bryder ikke længere lyset ud i flere vinkler.
@@ -19,6 +50,15 @@ What is the effect of inreasing shininess:
 Hvis shininess går mod uendeligt nærmer vi os et spejl. Vi kan se at når vi har sat shininess til 0 så reflekterer kuglen lys i i mange vinkler og ikke koncentreret.
 
 \section{Part 3}
+
+Programmet kan ses i figur \ref{fig:3-3-1}.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/3.png}
+\caption{Torus}
+\label{fig:3-3-1}
+\end{figure}
 
 Eye point at infinity:
 Hvis man flytter eye point til infinity kan nogle beregninger simplificeres. Der er lille forskel mellem vektorerne fra et objekt til øjet når man bevæger sig hen over objektet.
@@ -38,18 +78,74 @@ Hvis man bruger et directional light vil lyset altid komme paralelt fra den best
 
 \section{Part 4}
 
+De 2 shadings kan ses i figur \ref{fig:3-4-1} og \ref{fig:3-4-2}
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/4-1.png}
+\caption{FLAT}
+\label{fig:3-4-1}
+\end{figure}
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/4-2.png}
+\caption{GOURAUD}
+\label{fig:3-4-2}
+\end{figure}
+
 Difference on Flat, Gouraud and Fong shading:
 Flat shading skaber ``Mach bands'' mellem polygoner hvilket vil være meget synlige på runde former.
 
 Gouraud shading behandler vertexerne i et polygon og interpolerer mellem dem, mens Fong shading kan udregne pixel for pixel.
 
 
-Gouraud or Phong for highlighting:
-Hvis en highlighting tager et drastisk fald lige efter en vertex og man bruger Gouraud til at udregne sin shading vil faldet blive interpoleret og derved spredt ud gennem polygonet og derved bliver highlightingen størere, især hvis der er få polygoner i ens objekt. Fordi Phong beregner per pixel vil det være bedre at bruge denne.
+\texttt{Gouraud or Phong for highlighting:} Hvis en highlighting tager
+et drastisk fald lige efter en vertex og man bruger Gouraud til at
+udregne sin shading vil faldet blive interpoleret og derved spredt ud
+gennem polygonet og derved bliver highlightingen størere, især hvis
+der er få polygoner i ens objekt. Fordi Phong beregner per pixel vil
+det være bedre at bruge denne.
 
-Does Gouraud shading depends on orientation:
-Gouraud shading kan ændre sig hvis man roterer et objekt. Hvis man har en firkant hvor 2 modstående vertexer har værdi 1 og de resterende 2 har 0 så kan man dele den op på 2 måder. Den ene måde har hvert polygon 2 vertexer med værdi 1, den anden har de 2 med værdi 0. Hvis man så interpolerer vil centrum af kassen få værdi 1 i det ene tilfælde og værdi 0 i det andet, hvilket giver 2 forskellige resultater.
+\texttt{Does Gouraud shading depends on orientation:} Gouraud shading
+kan ændre sig hvis man roterer et objekt. Hvis man har en firkant hvor
+2 modstående vertexer har værdi 1 og de resterende 2 har 0 så kan man
+dele den op på 2 måder. Den ene måde har hvert polygon 2 vertexer med
+værdi 1, den anden har 2 med værdi 0. Hvis man så interpolerer vil
+centrum af kassen få værdi 1 i det ene tilfælde og værdi 0 i det
+andet, hvilket giver 2 forskellige resultater.
 
 \section{Part 5}
 
-\toto{Lav screenshots.}
+I figur \ref{fig:3-5-1} ses et billede af animationen hvor lyset flytter sig.
+
+I figur \ref{fig:3-5-2} ses et billede af animationen hvor eye-point flytter sig.
+
+I figur \ref{fig:3-5-3} ses et billede af animationen hvor eye-point og lyset flytter sig uafhængigt af hinanden.
+
+I figur \ref{fig:3-5-4} ses et billede af animationen hvor eye-point og lyset flytter sig sammen.
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/5-a1.png}
+\caption{Moving light}
+\label{fig:3-5-1}
+\end{figure}
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/5-a2.png}
+\caption{Moving eye}
+\label{fig:3-5-1}
+\end{figure}
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/5-a3.png}
+\caption{Moving light and eye, independant}
+\label{fig:3-5-1}
+\end{figure}
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise3/screenshots/5-a4.png}
+\caption{Moving light and eye, together}
+\label{fig:3-5-1}
+\end{figure}

@@ -7,7 +7,7 @@
 
 #pragma warning (disable : 4996) 
  
-void* load_ppm(const char* fn, int& width, int& height)
+void* load_ppm(const char* fn, int &width, int &height)
 {
     FILE* f = fopen(fn, "rb");
     if (!f) exit(-1);
@@ -20,7 +20,7 @@ void* load_ppm(const char* fn, int& width, int& height)
 	char c;
 	do
 	{
-		char tmp[128];
+		char tmp[256];
 		fscanf(f, "%[^\n]", tmp);	
 		fscanf(f, "%c", &c);
 	}
@@ -32,20 +32,20 @@ void* load_ppm(const char* fn, int& width, int& height)
 
     void* rgb = malloc(width*height*3);
     fread(rgb, 3, width*height, f);
-    fclose(f);
+    //fclose(f);
 
     return rgb;
 }
 
 
-void check_gl_error(void)
+void check_gl_error(const char *GLcall, const char *file, int line)
 {
     GLenum err = glGetError();
 
     if (err == GL_NO_ERROR)
         return;
 
-    printf("ERROR: %s\n", gluErrorString(err));
+    printf("ERROR: %s in %s (%s line %d)", gluErrorString(err), GLcall, file, line);
     getchar(); // Let me read the error, goddamnit
     exit(-1);
 }

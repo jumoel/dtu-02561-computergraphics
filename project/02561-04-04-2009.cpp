@@ -324,19 +324,19 @@ void special_keyboard(int key, int x, int y)
       break;
 
     case GLUT_KEY_UP:
-      settings.y_displ -= 1;
-      update_ortho();
-      break;
-    case GLUT_KEY_DOWN:
       settings.y_displ += 1;
       update_ortho();
       break;
+    case GLUT_KEY_DOWN:
+      settings.y_displ -= 1;
+      update_ortho();
+      break;
     case GLUT_KEY_LEFT:
-      settings.x_displ += 1;
+      settings.x_displ -= 1;
       update_ortho();
       break;
     case GLUT_KEY_RIGHT:
-      settings.x_displ -= 1;
+      settings.x_displ += 1;
       update_ortho();
       break;
   }

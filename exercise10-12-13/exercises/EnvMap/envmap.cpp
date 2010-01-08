@@ -40,38 +40,49 @@ void display() {
   Vec3f eye, at, up;
   ball->get_view_param(eye, at, up);
   GLfloat eyef[3] = { (GLfloat)eye[0], (GLfloat)eye[1], (GLfloat)eye[2] };
+
+  CHECKGL(glActiveTexture(GL_TEXTURE0));
+  CHECKGL(glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap));
+
+  CHECKGL(glActiveTexture(GL_TEXTURE1));
+  CHECKGL(glBindTexture(GL_TEXTURE_2D, normalmap));
   
   //draw skybox
-  glUseProgram(background);
-  texMapLocation[0] = glGetUniformLocation(background, "texMap");
-  glUniform1i(texMapLocation[0],0);
+  CHECKGL(glUseProgram(background));
+
+  CHECKGL(texMapLocation[0] = glGetUniformLocation(background, "texMap"));
+  CHECKGL(glUniform1i(texMapLocation[0],0));
 
   glutSolidCube(20.);
 
   //draw object
-  glUseProgram(glass);
-  texMapLocation[1] = glGetUniformLocation(glass, "texMap");
-  glUniform1i(texMapLocation[1],0);
+  CHECKGL(glUseProgram(glass));
 
-  // Normal map location
-  texMapLocation[2] = glGetUniformLocation(glass, "normalMap");
-  glUniform1i(texMapLocation[2],1);
+  CHECKGL(texMapLocation[1] = glGetUniformLocation(glass, "texMap"));
+  CHECKGL(glUniform1i(texMapLocation[1],0));
 
+  CHECKGL(texMapLocation[2] = glGetUniformLocation(glass, "normalMap"));
+  CHECKGL(glUniform1i(texMapLocation[2],1));
+ 
   // Send the cameraposition to the shader
-  camerapos = glGetUniformLocation(glass, "camera");
-  glUniform3f(camerapos, eyef[0], eyef[1], eyef[2]);
+  CHECKGL(camerapos = glGetUniformLocation(glass, "camera"));
+  CHECKGL(glUniform3f(camerapos, eyef[0], eyef[1], eyef[2]));
 
-  refraction = glGetUniformLocation(glass, "refraction");
-  glUniform1f(refraction, 0.5);
+  /*
+	Water: 1.33
+	Glass: 2.04
+	
+	http://www.robinwood.com/Catalog/Technical/Gen3DTuts/Gen3DPages/RefractionIndexList.html
+	*/
+  CHECKGL(refraction = glGetUniformLocation(glass, "refraction"));
+  CHECKGL(glUniform1f(refraction, 2.04));
 
   //glutSolidTeapot(1.f);
   glutSolidSphere(1.0, 32, 32);
   //glutSolidTorus(0.5, 1., 32, 32);
 
-  glUseProgram(0);
+  CHECKGL(glUseProgram(0));
   glutSwapBuffers();
-
-  check_gl_error();
 }
 
 
@@ -146,18 +157,33 @@ void init(void)
   glEnable(GL_TEXTURE_GEN_R);
   glEnable(GL_TEXTURE_CUBE_MAP);
 
-  glGenTextures(1, &cubemap);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+  CHECKGL(glGenTextures(1, &cubemap));
+  CHECKGL(glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap));
 
   for (int i = 0; i < 6; i++) {
     int wi, he;
 
     void *data = load_ppm(cube_fn[i], wi, he);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT + i, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    CHECKGL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
 
     free(data);
   }
+
+  //create normalmap
+  const char* normalmap_fn = "textures/normalmap.ppm";
+
+  CHECKGL(glGenTextures(1, &normalmap));
+  CHECKGL(glBindTexture(GL_TEXTURE_2D, normalmap));
+
+  int wi, he;
+  void *data = load_ppm(normalmap_fn, wi, he);
+
+  CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
+
+  free(data);
+  
+  //create shaders
 
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -165,25 +191,8 @@ void init(void)
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  //create normalmap
-  const char* normalmap_fn = "textures/normalmap.ppm";
-
-  glGenTextures(1, &normalmap);
-  glBindTexture(GL_NORMAL_MAP, normalmap);
-
-  int wi, he;
-  void *data = load_ppm(normalmap_fn, wi, he);
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT + i, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-  free(data);
-
-  //create shaders
-  background = create_program("background.vert", "background.frag");
-  
-  glass = create_program("glass.vert", "glass.frag");
-
-  check_gl_error();
+  CHECKGL(background = create_program("background.vert", "background.frag"));
+  CHECKGL(glass = create_program("glass.vert", "glass.frag"));
 }
 
 int main(int argc, char** argv)

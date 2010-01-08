@@ -4,7 +4,8 @@
 
 \section{Part 1}
 
-Når vi compiler programmet fra start får vi en animation der ser sådan ud.
+Når vi compiler programmet fra start får vi en animation, hvorfra et
+screenshot kan ses på figur \ref{fig:8-1-1}.
 
 \begin{figure}[hp]
 \centering
@@ -18,18 +19,21 @@ Når vi compiler programmet fra start får vi en animation der ser sådan ud.
 
 Vi skal nu implementere 2 funktioner:
 
-\texttt{set_from_light_perspective(...)}\\
-Funktionen laver en ``perspective projection'' som passer til objektet ud fra dens ``bounding sphere''.
+\texttt{set\_from\_light\_perspective(...)}\\
+Funktionen laver en ``perspective projection'' som passer til objektet
+ud fra dens ``bounding sphere''.
 
 
-\texttt{init_proj_shadow_texture(...)}\\
-Initialiserer en texture som indeholder skyggen, opretter et texture name og opsætter filters.
+\texttt{init\_proj\_shadow\_texture(...)}\\
+Initialiserer en texture som indeholder skyggen, opretter et texture
+name og opsætter filters.
 
 \section{Part 3}
 
-\texttt{make_proj_shadow_texture(...) }
+\paragraph{\texttt{make\_proj\_shadow\_texture(...)}}
 
-Thepotten renderes fra lyskilden og kopierer framebufferen til en textur.
+Tepotten renderes fra lyskilden og kopierer framebufferen til en
+textur.
 
 \begin{figure}[hp]
 \centering
@@ -40,11 +44,14 @@ Thepotten renderes fra lyskilden og kopierer framebufferen til en textur.
 
 \section{Part 4}
 
-\texttt{draw_proj_shadow(...)}
+\paragraph{\texttt{draw\_proj\_shadow(...)}}
 
 Til sidst sættes det hele sammen. Farven i frame bufferen blandes med texturen.
 
-Der er tilføjet et clipping plane, så skyggen ikke bliver vist hvis thepotten er under gulvet. Dette skal bruges i exercise 10.
+Der er tilføjet et clipping plane, så skyggen ikke bliver vist hvis
+tepotten er under gulvet. Dette skal bruges i exercise 10.
+
+Et screenshot af dette kan ses på figur \ref{fig:4-3-1}.
 
 \begin{figure}[hp]
 \centering
@@ -52,3 +59,8 @@ Der er tilføjet et clipping plane, så skyggen ikke bliver vist hvis thepotten er
 \caption{Det færdige program}
 \label{fig:4-3-1}
 \end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 

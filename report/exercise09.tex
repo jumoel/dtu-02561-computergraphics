@@ -1,10 +1,10 @@
-
 \chapter{Ugeopgave 9}
 \label{cha:ugeopgave-9}
 
 \section{Part 2}
 
-Vi reflekterer thepotten i vores plan der indeholder vores ``quad''. Vi skal spejle billedet ved at skifte orienteringen.
+Vi reflekterer thepotten i vores plan der indeholder vores
+``quad''. Vi skal spejle billedet ved at skifte orienteringen.
 
 \section{Part 3}
 
@@ -12,22 +12,37 @@ Dernæst skal der opsættes endnu en lyskilde som bruges når vi tegner reflektione
 
 \section{Part 4}
 
-Vi sikrer os at draw_mirror kaldes før draw_proj_shadow i display funktionen. draw_proj_shadow påvirker farve bufferen og denne skal derfor slåes fra og til før og efter funktionen kaldes. Texturplanet skal blendes med reflektionen af thepotten. Resultatet kan ses i figur \ref{fig:9-1-1}.
+Vi sikrer os at \texttt{draw\_mirror} kaldes før
+\texttt{draw\_proj\_shadow} i display
+funktionen. \texttt{draw\_proj\_shadow} påvirker farve bufferen og denne
+skal derfor slåes fra og til før og efter funktionen
+kaldes. Texturplanet skal blendes med reflektionen af
+tepotten. Resultatet kan ses i figur \ref{fig:9-1-1}.
 
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise9/screenshots/4.png}
-\caption{Thekande}
+\caption{Tekande}
 \label{fig:9-1-1}
 \end{figure}
 
 \section{Part 5}
 
-For at rette op på en mindre fejl, at der kan blivee tegnet reflektion uden for reflektionsplanet, tegner vi først reflektionsplanet. Når reflektionen så skal tegnes bruger vi vores stencil buffer og tegner derved kun reflektionen steder hvor der allerede er tegnet. Derved undgår vi at tegne uden for vores ``quad''
+For at rette op på en mindre fejl, at der kan blive tegnet reflektion
+uden for reflektionsplanet, tegner vi først reflektionsplanet. Når
+reflektionen så skal tegnes bruger vi vores stencil buffer og tegner
+derved kun reflektionen steder hvor der allerede er tegnet. Derved
+undgår vi at tegne uden for vores ``quad''
 
 
 \section{Part 6}
 
-Der står i opgaven at man skal lade thepotten gå igennem vores ``quad''. Det har den nu gjort siden part 1 i exercise09. Derved opstår der ikke noget nyt problem da vi allerede har taget højde for dette med et clipping plane som vi introducerede i exercise08.
+Der står i opgaven at man skal lade tepotten gå igennem vores
+``quad''. Det har den nu gjort siden part 1 i exercise09. Derved
+opstår der ikke noget nyt problem da vi allerede har taget højde for
+dette med et clipping plane som vi introducerede i exercise08.
 
-
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 

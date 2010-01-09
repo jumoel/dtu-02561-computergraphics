@@ -15,9 +15,41 @@ const GLdouble farVal      = 20.0;
 const GLfloat  lightPos[4] = {3.0f, 3.0f, 3.0f, 1.0f};
 GLuint         program     = 0;
 GLint          timeParam;
+static GLuint texture;
+static GLint textureloc;
 
 GLchar *ebuffer; /* buffer for error messages */
 GLsizei elength; /* length of error message */
+
+void* load_ppm(const char* fn, int &width, int &height)
+{
+    FILE* f = fopen(fn, "rb");
+    if (!f) exit(-1);
+    
+    char magic[3];
+    fread(magic, 1, 3, f);
+    if (magic[0]!='P' || magic[1]!='6')
+        exit(-1);
+
+	char c;
+	do
+	{
+		char tmp[256];
+		fscanf(f, "%[^\n]", tmp);	
+		fscanf(f, "%c", &c);
+	}
+	while (c == '#');
+	ungetc(c,f);
+
+    int max;
+    fscanf(f, "%u\n%u\n%u\n", &width, &height, &max);
+
+    void* rgb = malloc(width*height*3);
+    fread(rgb, 3, width*height, f);
+    //fclose(f);
+
+    return rgb;
+}
 
 /* shader reader */
 /* creates null terminated string from file */
@@ -26,7 +58,7 @@ static char* readShaderSource(const char* shaderFile)
   struct stat statBuf;
   FILE *fp = fopen(shaderFile, "rb");
 
-  if (fp == NULL) { printf("fp null"); printf("%s", strerror(errno)); exit(EXIT_FAILURE); }
+  if (fp == NULL) { printf("fp null"); printf("%s", strerror(errno)); getchar(); exit(EXIT_FAILURE); }
 
   char* buf;
 
@@ -44,6 +76,7 @@ static void checkError(GLint status, const char *msg)
   if (!status)
   {
     printf("%s\n", msg);
+    getchar();
     exit(EXIT_FAILURE);
   }
 }
@@ -129,7 +162,7 @@ static void draw(void)
 {
   /* send elapsed time to shaders */
   glUniform1f(timeParam, glutGet(GLUT_ELAPSED_TIME));
-
+  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPushMatrix();
   glTranslatef(0.0f, 0.0f, -5.0f);
@@ -166,6 +199,11 @@ static void keyboard(unsigned char key, int x, int y)
 
 static void idle(void) {
   glUniform1f(timeParam, glutGet(GLUT_ELAPSED_TIME));
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glUniform1i(textureloc,0);
+
   glutPostRedisplay();
 }
 
@@ -182,7 +220,7 @@ int main(int argc, char** argv)
   glutIdleFunc(idle);
 
   init();
-  initShader("vGouraud.glsl", "fSimple.glsl");
+  initShader("vFragPhong.glsl", "fPhong.glsl");
 
   glutMainLoop();
   return 0;

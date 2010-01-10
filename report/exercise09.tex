@@ -1,46 +1,50 @@
 \chapter{Ugeopgave 9}
 \label{cha:ugeopgave-9}
 
-\section{Part 2}
+\section{Del 1}
+
+Denne ugeopgave bruger samme \textit{framework} som ugeopgave 8.
+
+\section{Del 2}
 
 Vi reflekterer thepotten i vores plan der indeholder vores
 ``quad''. Vi skal spejle billedet ved at skifte orienteringen.
 
-\section{Part 3}
+\section{Del 3}
 
-Dernæst skal der opsættes endnu en lyskilde som bruges når vi tegner reflektionen.
+Herefter blev der opsat endnu en lyskilde som bruges når vi tegner reflektionen.
 
-\section{Part 4}
+\section{Del 4}
 
 Vi sikrer os at \texttt{draw\_mirror} kaldes før
 \texttt{draw\_proj\_shadow} i display
 funktionen. \texttt{draw\_proj\_shadow} påvirker farve bufferen og denne
 skal derfor slåes fra og til før og efter funktionen
-kaldes. Texturplanet skal blendes med reflektionen af
+kaldes. \textit{Texturplanet} skal blendes med reflektionen af
 tepotten. Resultatet kan ses i figur \ref{fig:9-1-1}.
 
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise9/screenshots/4.png}
-\caption{Tekande}
+\caption{Tekande med reflektion}
 \label{fig:9-1-1}
 \end{figure}
 
-\section{Part 5}
+\section{Del 5}
 
-For at rette op på en mindre fejl, at der kan blive tegnet reflektion
+For at rette op på den mindre fejl, at der kan blive tegnet reflektion
 uden for reflektionsplanet, tegner vi først reflektionsplanet. Når
 reflektionen så skal tegnes bruger vi vores stencil buffer og tegner
 derved kun reflektionen steder hvor der allerede er tegnet. Derved
 undgår vi at tegne uden for vores ``quad''
 
 
-\section{Part 6}
+\section{Del 6}
 
 Der står i opgaven at man skal lade tepotten gå igennem vores
-``quad''. Det har den nu gjort siden part 1 i exercise09. Derved
+``quad''. Det har den gjort siden del 1 i ugeopgave 8. Derved
 opstår der ikke noget nyt problem da vi allerede har taget højde for
-dette med et clipping plane som vi introducerede i exercise08.
+dette med et clipping plane som vi introducerede i ugeopgave 8.
 
 %%% Local Variables: 
 %%% mode: latex

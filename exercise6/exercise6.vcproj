@@ -133,6 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="glew32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -172,12 +173,24 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\fPhong.glsl"
+				>
+			</File>
+			<File
 				RelativePath=".\fSimple.glsl"
 				DeploymentContent="true"
 				>
 			</File>
 			<File
 				RelativePath=".\SimpleVF-cpp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\vFragPhong.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\vGouraud.glsl"
 				>
 			</File>
 			<File

@@ -2,19 +2,19 @@
 \chapter{Ugeopgave 7}
 \label{cha:ugeopgave-7}
 
-\section{Part 1}
+\section{Del 1}
 
 Vi har lavet et program der tegner et rødt polygon og kaster en skygge i XwZw planet som kan ses på figur \ref{fig:7-1-1}.
 
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise7/screenshots/1a.png}
-\caption{Skygge i XwZw}
+\caption{Skygge i XwZw-planet}
 \label{fig:7-1-1}
 \end{figure}
 
-Dernæst skulle skyggen flyttes ned i Yw=-4.
-Vores løsning flytter blot kassen og lyset 4 højere efter skyggen er tegnet da dette virkede som en lettere løsning. Det kan ses af figur \ref{fig:7-1-2}.
+Dernæst skulle skyggen flyttes ned i $Yw=-4$.
+Vores løsning flytter blot kassen og lyset 4 højere, da dette var en lettere løsning. Resultatet kan ses af figur \ref{fig:7-1-2}.
 
 \begin{figure}[hp]
 \centering
@@ -23,11 +23,11 @@ Vores løsning flytter blot kassen og lyset 4 højere efter skyggen er tegnet da d
 \label{fig:7-1-2}
 \end{figure}
 
-\section{Part 2}
+\section{Del 2}
 
 Vi kunne tegne kassen med \texttt{glutSolidCube}, men har istedet valgt manuelt at lave alle koordinaterne til vertexerne for at prøve det.
 
-Kassen kan ses på figur \ref{fig:7-2-1} med dens tilhørende skygge i YwZw planet hvor Xw=-4.
+Kassen kan ses på figur \ref{fig:7-2-1} med dens tilhørende skygge i YwZw planet hvor $Xw=-4$.
 
 \begin{figure}[hp]
 \centering
@@ -36,9 +36,11 @@ Kassen kan ses på figur \ref{fig:7-2-1} med dens tilhørende skygge i YwZw planet
 \label{fig:7-2-1}
 \end{figure}
 
-\section{Part 3}
+\section{Del 3}
 
-Til opgave 3 skal der tilføjes ``directional light'' til de 2 foregående opgaver. Det gøres ved at lave matricen $\mathbf{M}$ om til at inkludere planet hvilket bla. ses i opgave 5.17.
+I denne delopgave skal der tilføjes ``directional light'' til de to
+foregående opgaver. Det gøres ved at lave matricen $\mathbf{M}$ om til
+at inkludere planet hvilket bla. ses ved løsning af opgave 5.17\footnote{Angel s. 287}.
 
 \begin{align*}
   \mathbf{M} = &
@@ -50,7 +52,7 @@ b \cdot d_y+c \cdot d_z & -b \cdot d_x & -c \cdot d_x & -d \cdot d_x\\
     \end{bmatrix}
 \end{align*}
 
-Resultatet kan ses i figur \ref{fig:7-3-1}, \ref{fig:7-3-2} og \ref{fig:7-3-3.}
+Resultatet kan ses i figur \ref{fig:7-3-1}, \ref{fig:7-3-2} og \ref{fig:7-3-3}.
 
 \begin{figure}[hp]
 \centering
@@ -75,6 +77,8 @@ Resultatet kan ses i figur \ref{fig:7-3-1}, \ref{fig:7-3-2} og \ref{fig:7-3-3.}
 \end{figure}
 
 \section{Part 4}
+
+Et andet eksempel på kassen kan ses i figur \ref{fig:7-4-1}.
 
 \begin{figure}[hp]
 \centering

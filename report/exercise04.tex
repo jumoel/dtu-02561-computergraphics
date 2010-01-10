@@ -5,7 +5,7 @@
 Formålet med denne opgave er at blive fortrolig med input og
 vindueshåndtering i Glut og OpenGL.
 
-\section{Del 1: \texttt{newpaint}}
+\section{Del 1}
 \label{sec:del-1:-newpaint}
 
 \texttt{Newpaint} har fem knapper, der hver har sin egen
@@ -35,15 +35,15 @@ blevet trykket på. Det gør den ved at undersøge om musetrykket er
 inden for rammerne af knapperne. Da hver knap altid fylder 10\% af
 skærmbredden er dette tjek nemt.
 
-\section{Del 2: \texttt{select}, \texttt{pick}, \texttt{picksqua}, \texttt{pickdept}}
+\section{Del 2}
 \label{sec:del-2:-select-pick-picks}
 
 \subsection{\texttt{select}}
 \label{sec:select}
 
 \texttt{select}-programmet demonstrerer, hvordan udvælgelsesfunktionen
-i OpenGL undersøger, hvor mange forskellige objekter, der er inde i et
-område defineret af en omgivende kasse.
+i OpenGL fungerer.Funktionen undersøger hvor mange forskellige
+objekter, der er inde i en defineret omgivende kasse.
 
 \subsection{\texttt{pick}}
 \label{sec:pick}
@@ -81,7 +81,7 @@ kombination af \emph{picking} og \emph{selection} gør det muligt at
 skelne mellem objekter, der er blevet \emph{picket}, selvom de
 eventuelt gemmer sig bag hinanden.
 
-\section{\texttt{line}, \texttt{single\_double}, logik og \emph{rubber banding}}
+\section{Del 3}
 \label{sec:line-singledouble-logik}
 
 \texttt{line}-prgrammet lader en tegne linjer på et billede, der
@@ -111,10 +111,10 @@ være en linje, hvor startpunktet er bestemt, mens slutpunktet først
 bestemmes ved det næste museklik. Når musen så flyttes, skal linjen
 gentegnes hele tiden, så resultatet kan ses med det samme.
 
-\section{Diagramprogram}
+\section{Del 4}
 \label{sec:diagramprogram}
 
-Vores diagramprogram kan ses i funktion på figur \ref{fig:4-1}. Man
+Vores diagramprogram kan ses i aktion på figur \ref{fig:4-1}. Man
 indsætter nye elementer i diagrammet ved hjælp af
 højrekliksmenuen. Herefter kan elementerne flyttes ved at trække dem
 med musen. Holdes \texttt{CTRL} nede, inden og mens elementet vælges
@@ -128,6 +128,6 @@ slettet.
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise4/screenshots/part4.png}
-\caption{Isometrisk view}
+\caption{Diagramtegningsprogram}
 \label{fig:4-1}
 \end{figure}

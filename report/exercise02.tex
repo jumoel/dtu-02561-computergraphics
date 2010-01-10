@@ -6,7 +6,7 @@ Denne ugeopgave beskæftiger sig med forskellige måder at lave det
 virtuelle kamera, samt at gøre os bekvemme med at ændre på parametrene
 til kamerafunktionerne.
 
-\section{Del 1: Isometri}
+\section{Del 1}
 \label{sec:del-1:-isometri}
 
 I denne opgave skulle der laves et isometri-\emph{view}. Dette blev
@@ -23,7 +23,7 @@ dette, med op-vektoren pegende i z-aksens retning, ses på figur
 \label{fig:2-1}
 \end{figure}
 
-\section{Del 2: Viewing transformation}
+\section{Del 2}
 \label{sec:del-2:-viewing}
 
 Viewing transformationen kan generelt opnås med et antal rotationer og
@@ -37,9 +37,9 @@ For at opnå det samme billede som med \texttt{gluLookAt}, har vi behov
 for følgende operationer:
 
 \begin{itemize}
-\item $-90 \deg$ rotation om x-aksen
-\item $-135 \deg$ rotation om y-aksen
-\item $35.26 \deg$ rotation om x-aksen\footnote{Se Angel s. 247 for forklaring} 
+\item $-90 \degree$ rotation om x-aksen
+\item $-135 \degree$ rotation om y-aksen
+\item $35.26 \degree$ rotation om x-aksen\footnote{Se Angel s. 247 for forklaring} 
 \end{itemize}
 
 Dermed er vores matricer som følger:
@@ -48,32 +48,33 @@ Dermed er vores matricer som følger:
   \mathbf{R}_1 = &
     \begin{bmatrix}
       1 & 0 & 0 & 0 \\
-      0 & cos -90 \deg & -sin -90 \deg & 0 \\
-      0 & sin -90 \deg & cos -90 \deg & 0 \\
+      0 & cos -90 \degree & -sin -90 \degree & 0 \\
+      0 & sin -90 \degree & cos -90 \degree & 0 \\
       0 & 0 & 0 & 1
     \end{bmatrix} \\
   \mathbf{R}_2 = &
     \begin{bmatrix}
-      cos -135 \deg & 0 & sin -135 \deg & 0 \\
+      cos -135 \degree & 0 & sin -135 \degree & 0 \\
       0 & 1 & 0 & 0 \\
-      -sin -135 \deg & 0 & cos -135 \deg & 0 \\
+      -sin -135 \degree & 0 & cos -135 \degree & 0 \\
       0 & 0 & 0 & 1
     \end{bmatrix} \\
   \mathbf{R}_3 = &
     \begin{bmatrix}
       1 & 0 & 0 & 0 \\
-      0 & cos 35.26 \deg & -sin 35.26 \deg & 0 \\
-      0 & sin 35.26 \deg & cos 35.26 \deg & 0 \\
+      0 & cos 35.26 \degree & -sin 35.26 \degree & 0 \\
+      0 & sin 35.26 \degree & cos 35.26 \degree & 0 \\
       0 & 0 & 0 & 1
     \end{bmatrix} \\
 \end{align*}
 
-Resultatet af vores manuelle opsætning af kameraet kan ses på figur 
+Resultatet af vores manuelle opsætning af kameraet kan ses på figur
+\ref{fig:2-2}. Som det kan ses er den identisk med figur \ref{fig:2-1}
 
 \begin{figure}[hp]
 \centering
 \includegraphics[width=8cm]{../exercise2/screenshots/part2.png}
-\caption{Isometrisk view}
+\caption{Manuel opsætning af kamera}
 \label{fig:2-2}
 \end{figure}
 
@@ -83,10 +84,6 @@ Resultatet af vores manuelle opsætning af kameraet kan ses på figur
 Denne del er så vidt vi kan se allerede løst i forbindelse med
 forgående delopgave.
 
-\section{Del 4: Simplificeret fly}
-\label{sec:del-4:-simplificeret}
-
-Denne del er ikke lavet. \todo{Lav et simplificeret fly}
 
 %%% Local Variables: 
 %%% mode: latex

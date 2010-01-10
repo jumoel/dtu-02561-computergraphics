@@ -18,7 +18,8 @@ Med et \emph{cubemap} sat op, blev \emph{skybox}'en sat op vha. disse
 simple hhv. \emph{vertex}- og \emph{fragmentshadere}:
 
 \begin{verbatim}
-void main(void)
+// Vertex shader
+void main(void) 
 {
 	gl_Position = ftransform();
 	gl_TexCoord[0].xyz = gl_Vertex.xyz;
@@ -26,6 +27,7 @@ void main(void)
 \end{verbatim} \\
 
 \begin{verbatim}
+//Fragment shader
 uniform samplerCube texMap;
 
 void main()
@@ -57,7 +59,7 @@ på figur \ref{fig:10-3-2} for at demonstrere korrekt reflektering.
 
 Det blå rektangel i reflektionen skyldes formentlig en teksturfejl i
 en af \texttt{PPM}-filerne, da teksturen også er rød i stedet for blå
-når den åbnes i et program som Adobe Photoshop.
+når den åbnes i et billedbehandlingsprogram.
 
 \begin{figure}[hp]
 \centering

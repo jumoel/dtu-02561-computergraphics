@@ -46,7 +46,7 @@ void* load_ppm(const char* fn, int &width, int &height)
 
     void* rgb = malloc(width*height*3);
     fread(rgb, 3, width*height, f);
-    //fclose(f);
+    fclose(f);
 
     return rgb;
 }
@@ -81,6 +81,24 @@ static void checkError(GLint status, const char *msg)
   }
 }
 
+/*	Create checkerboard texture	*/
+#define	checkImageWidth 64
+#define	checkImageHeight 64
+GLubyte checkImage[checkImageWidth][checkImageHeight][3];
+void makeCheckImage(void)
+{
+    int i, j, c;
+    
+    for (i = 0; i < checkImageWidth; i++) {
+	    for (j = 0; j < checkImageHeight; j++) {
+	        c = ((((i&0x8)==0)^((j&0x8))==0))*255;
+	        checkImage[i][j][0] = (GLubyte) c;
+	        checkImage[i][j][1] = (GLubyte) c;
+	        checkImage[i][j][2] = (GLubyte) c;
+	    }
+    }
+}
+
 /* standard OpenGL initialization */
 static void init()
 {
@@ -88,7 +106,7 @@ static void init()
   const float teapotSpecular[]  = {0.8f, 0.8f, 0.8f, 1.0f};
   const float teapotShininess[] = {80.0f};
 
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, teapotColor);
+  //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, teapotColor);
   glMaterialfv(GL_FRONT, GL_SPECULAR, teapotSpecular);
   glMaterialfv(GL_FRONT, GL_SHININESS, teapotShininess);
 
@@ -104,6 +122,18 @@ static void init()
   glEnable(GL_LIGHTING); 
   glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
+  
+  makeCheckImage();
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, checkImageWidth, 
+	                checkImageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, 
+	                &checkImage[0][0][0]);
+
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  glEnable(GL_TEXTURE_2D);
 }
 
 /* GLSL initialization */
@@ -143,6 +173,14 @@ static void initShader(const GLchar* vShaderFile, const GLchar* fShaderFile)
   checkError(status, "Failed to compile the vertex shader.");
 
   glGetShaderiv(fShader, GL_COMPILE_STATUS, &status);
+  if (status == GL_FALSE)
+	{
+		int len = 0;
+		glGetShaderiv(fShader, GL_INFO_LOG_LENGTH, &len);
+		char* log = (char*)malloc(len);	
+		glGetShaderInfoLog(fShader, len, NULL, log); 
+		printf(log); free(log); getchar(); exit(-1);
+	}
   checkError(status, "Failed to compile the fragment shader.");
 
   /* link */
@@ -153,6 +191,9 @@ static void initShader(const GLchar* vShaderFile, const GLchar* fShaderFile)
     
   /* use program object */
   glUseProgram(program);
+
+  textureloc = glGetUniformLocation(program, "tex");
+  glUniform1i(textureloc,0);
 
   /* set up uniform parameter */
   timeParam = glGetUniformLocation(program, "time");
@@ -220,7 +261,7 @@ int main(int argc, char** argv)
   glutIdleFunc(idle);
 
   init();
-  initShader("vFragPhong.glsl", "fPhong.glsl");
+  initShader("vFragPhongTex.glsl", "fPhongTex.glsl");
 
   glutMainLoop();
   return 0;

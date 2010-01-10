@@ -133,6 +133,38 @@ Resultatet kan ses på figur \ref{fig:6-3}.
 \label{fig:6-3}
 \end{figure}
 
+\section{Del 4}
+\label{sec:del-4-1}
+
+Teksturen på tekanden, der kan ses på figur \ref{fig:6-4}, blev påsat
+ved hjælp af følgende tilføjelser i shaderprogrammerne:
+
+\begin{verbatim}
+// Tilføjelse i vertexshaderen
+
+varying vec2 texpos
+...
+texpos = vec2(gl_MultiTexCoord0);
+\end{verbatim} \\
+
+\begin{verbatim}
+// Tilføjelse i fragmentshaderen
+
+uniform sampler2D tex;
+varying vec2 texpos;
+...
+vec4 texel = texture2D(tex, texpos);
+gl_FragColor = (diffuse + specular + ambient) * texel;
+\end{verbatim}
+
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=8cm]{../exercise6/screenshots/part3.png}
+\caption{Per-fragment Phong-shading med tekstur i GLSL}
+\label{fig:6-4}
+\end{figure}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "report_main"
